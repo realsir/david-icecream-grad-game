@@ -1,0 +1,887 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>David & Ice Cream — Quest</title>
+
+  <!-- Stylish pixel-like font -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap" rel="stylesheet">
+
+  <style>
+    :root{
+      --ui-bg: rgba(10, 12, 18, 0.72);
+      --ui-border: rgba(255,255,255,0.16);
+      --ui-text: rgba(255,255,255,0.92);
+      --ui-muted: rgba(255,255,255,0.72);
+      --accent: #b46cff;
+      --accent2:#5fe1ff;
+      --danger:#ff4d6d;
+      --ok:#37d67a;
+    }
+
+    *{ box-sizing:border-box; margin:0; padding:0; }
+    html, body { height:100%; }
+    body{
+      font-family: "Press Start 2P", monospace;
+      color: var(--ui-text);
+      background: url("fon.png") center/cover no-repeat fixed;
+      overflow:hidden;
+    }
+
+    .screen{
+      position:fixed; inset:0;
+      display:flex; align-items:center; justify-content:center;
+      padding:24px;
+    }
+
+    .hidden{ display:none !important; }
+
+    /* soft vignette for readability */
+    .screen::before{
+      content:"";
+      position:absolute; inset:0;
+      background: radial-gradient(1200px 700px at 50% 40%, rgba(0,0,0,0.18), rgba(0,0,0,0.58));
+      pointer-events:none;
+    }
+
+    .card-inner{
+      padding:26px 22px;
+      display:grid;
+      grid-template-columns: 1fr;
+      gap:16px;
+    }
+
+    .intro-hero{
+      display:flex;
+      flex-direction:column;
+      align-items:center;
+      text-align:center;
+      gap:16px;
+      padding:18px 14px 6px 14px;
+    }
+
+    .intro-hero img{
+      width:min(360px, 62vw);
+      height:auto;
+      image-rendering: pixelated;
+      filter: drop-shadow(0 10px 18px rgba(0,0,0,0.45));
+    }
+
+    .intro-text{
+      font-size: 11px;
+      line-height: 1.65;
+      color: var(--ui-text);
+      opacity:0.98;
+      padding: 0 10px 10px 10px;
+    }
+
+    .button-row{
+      display:flex;
+      gap:12px;
+      justify-content:center;
+      flex-wrap:wrap;
+      padding-bottom: 18px;
+    }
+
+    .btn{
+      font-family: inherit;
+      font-size: 12px;
+      padding: 12px 14px;
+      border-radius: 12px;
+      border: 1px solid rgba(255,255,255,0.16);
+      color: rgba(255,255,255,0.92);
+      background: linear-gradient(135deg, rgba(180,108,255,0.22), rgba(95,225,255,0.16));
+      cursor:pointer;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      transition: transform 0.12s ease, filter 0.2s ease, border-color 0.2s ease;
+      user-select:none;
+    }
+    .btn:hover{ transform: translateY(-2px); border-color: rgba(255,255,255,0.28); filter: brightness(1.06); }
+    .btn:active{ transform: translateY(0px); }
+
+    .btn-danger{
+      background: linear-gradient(135deg, rgba(255,77,109,0.24), rgba(180,108,255,0.14));
+    }
+    .btn-ghost{
+      background: rgba(255,255,255,0.06);
+    }
+
+    /* Game UI top bar */
+    #hud{
+      position:fixed;
+      top:14px; left:50%;
+      transform: translateX(-50%);
+      width:min(1100px, 94vw);
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      gap:12px;
+      padding: 12px 12px;
+      background: rgba(8,10,16,0.55);
+      border:1px solid rgba(255,255,255,0.14);
+      border-radius: 14px;
+      backdrop-filter: blur(8px);
+      z-index:10;
+    }
+
+    .hud-block{
+      display:flex;
+      flex-direction:column;
+      gap:6px;
+      min-width: 210px;
+    }
+
+    .hud-line{
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      gap:12px;
+      font-size:10px;
+      color: rgba(255,255,255,0.82);
+      white-space:nowrap;
+    }
+
+    .progress-wrap{
+      flex:1;
+      min-width: 260px;
+      display:flex;
+      flex-direction:column;
+      gap:8px;
+    }
+
+    .progress-bar{
+      width:100%;
+      height: 12px;
+      border-radius: 999px;
+      background: rgba(255,255,255,0.10);
+      border: 1px solid rgba(255,255,255,0.14);
+      overflow:hidden;
+    }
+    .progress-fill{
+      height:100%;
+      width:0%;
+      background: linear-gradient(90deg, rgba(180,108,255,0.85), rgba(95,225,255,0.85));
+    }
+
+    /* Canvas */
+    #game{
+      position:fixed;
+      inset:0;
+      width:100vw;
+      height:100vh;
+      display:block;
+      z-index:1;
+    }
+
+    /* Overlay panels (level start / game over) */
+    .overlay{
+      position:fixed;
+      inset:0;
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      padding:24px;
+      z-index:20;
+    }
+    .overlay::before{
+      content:"";
+      position:absolute; inset:0;
+      background: rgba(0,0,0,0.55);
+      backdrop-filter: blur(6px);
+    }
+    .panel{
+      position:relative;
+      width:min(820px, 94vw);
+      background: linear-gradient(180deg, rgba(22,26,38,0.92), rgba(10,12,18,0.86));
+      border:1px solid rgba(255,255,255,0.16);
+      border-radius:18px;
+      box-shadow: 0 20px 85px rgba(0,0,0,0.55);
+      padding: 22px 18px;
+    }
+    .panel h2{
+      font-size: 13px;
+      line-height:1.4;
+      margin-bottom: 14px;
+      color: rgba(255,255,255,0.94);
+    }
+    .panel p{
+      font-size: 10px;
+      line-height:1.8;
+      color: rgba(255,255,255,0.82);
+      margin-bottom: 16px;
+    }
+    .panel .meta{
+      font-size: 10px;
+      line-height:1.8;
+      color: rgba(255,255,255,0.72);
+      margin-bottom: 18px;
+    }
+
+    .panel-actions{
+      display:flex;
+      gap:12px;
+      justify-content:flex-start;
+      flex-wrap:wrap;
+    }
+
+    /* Mobile tweaks */
+    @media (max-width: 560px){
+      .intro-text{ font-size:10px; }
+      .btn{ font-size:11px; padding: 12px 12px; }
+      #hud{ top:10px; padding:10px; gap:10px; }
+      .hud-line{ font-size:9px; }
+      .hud-block{ min-width: 160px; }
+    }
+  </style>
+</head>
+
+<body>
+  <!-- Intro screen -->
+  <section id="intro" class="screen">
+    <div class="card">
+      <div class="card-inner">
+        <div class="intro-hero">
+          <img src="1.png" alt="Intro image" />
+          <div class="intro-text">
+            You probably remember that back in December David got upset because he couldn’t taste ice cream.
+            Now this is a game — a whole campaign dedicated to David and ice cream.
+            A long journey awaits...
+          </div>
+        </div>
+
+        <div class="button-row">
+          <button id="btnStart" class="btn">./ START</button>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Game -->
+  <canvas id="game" class="hidden"></canvas>
+
+  <!-- HUD -->
+  <div id="hud" class="hidden">
+    <div class="hud-block">
+      <div class="hud-line">
+        <span>LEVEL</span>
+        <span id="hudLevel">1 / 4</span>
+      </div>
+      <div class="hud-line">
+        <span>TIME</span>
+        <span id="hudTime">00.0</span>
+      </div>
+    </div>
+
+    <div class="progress-wrap">
+      <div class="hud-line">
+        <span>PROGRESS</span>
+        <span id="hudProgressText">0%</span>
+      </div>
+      <div class="progress-bar">
+        <div id="hudProgressFill" class="progress-fill"></div>
+      </div>
+    </div>
+
+    <div class="hud-block">
+      <div class="hud-line">
+        <span>GOAL</span>
+        <span id="hudGoal">—</span>
+      </div>
+      <div class="hud-line">
+        <span>COLLECTED</span>
+        <span id="hudCollected">0</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- Level start overlay -->
+  <div id="levelOverlay" class="overlay hidden">
+    <div class="panel">
+      <h2 id="levelTitle">LEVEL 1</h2>
+      <p id="levelTask">Task text…</p>
+      <div class="panel-actions">
+        <button id="btnLevelGo" class="btn">./ LEVEL 1</button>
+        <button id="btnBackMenuFromLevel" class="btn btn-ghost">./ MENU</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Game over overlay -->
+  <div id="gameOverOverlay" class="overlay hidden">
+    <div class="panel">
+      <h2>GAME OVER</h2>
+      <p id="gameOverReason">You failed the task.</p>
+      <div class="meta" id="gameOverMeta">—</div>
+      <div class="panel-actions">
+        <button id="btnRestart" class="btn btn-danger">./ RESTART</button>
+        <button id="btnMenu" class="btn btn-ghost">./ MENU</button>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    // ---------- Asset loading ----------
+    function loadImage(src){
+      return new Promise((resolve, reject) => {
+        const img = new Image();
+        img.onload = () => resolve(img);
+        img.onerror = () => reject(new Error("Failed to load " + src));
+        img.src = src;
+      });
+    }
+
+    const ASSETS = {
+      player: "david.png",
+      white: "icecream-1.png",
+      purple: "icecream-2.png",
+      yellow: "icecream-3.png",
+    };
+
+    const ui = {
+      intro: document.getElementById("intro"),
+      canvas: document.getElementById("game"),
+      hud: document.getElementById("hud"),
+
+      hudLevel: document.getElementById("hudLevel"),
+      hudTime: document.getElementById("hudTime"),
+      hudGoal: document.getElementById("hudGoal"),
+      hudCollected: document.getElementById("hudCollected"),
+      hudProgressText: document.getElementById("hudProgressText"),
+      hudProgressFill: document.getElementById("hudProgressFill"),
+
+      levelOverlay: document.getElementById("levelOverlay"),
+      levelTitle: document.getElementById("levelTitle"),
+      levelTask: document.getElementById("levelTask"),
+      btnLevelGo: document.getElementById("btnLevelGo"),
+      btnBackMenuFromLevel: document.getElementById("btnBackMenuFromLevel"),
+
+      gameOverOverlay: document.getElementById("gameOverOverlay"),
+      gameOverReason: document.getElementById("gameOverReason"),
+      gameOverMeta: document.getElementById("gameOverMeta"),
+
+      btnStart: document.getElementById("btnStart"),
+      btnRestart: document.getElementById("btnRestart"),
+      btnMenu: document.getElementById("btnMenu"),
+    };
+
+    // ---------- Game config ----------
+    const LEVELS = [
+      {
+        name: "LEVEL 1",
+        task: "Your mission: collect 10 white ice creams in 30 seconds.",
+        timeLimit: 30,
+        goal: { white: 10, purple: 0, yellow: 0 },
+        forbidden: { purple: false, yellow: false, white: false },
+        enemies: { purple: 0 }, // extra moving enemies
+        spawn: { white: 10, purple: 0, yellow: 0 },
+      },
+      {
+        name: "LEVEL 2",
+        task: "Collect 10 purple ice creams in 20 seconds.",
+        timeLimit: 20,
+        goal: { white: 0, purple: 10, yellow: 0 },
+        forbidden: { purple: false, yellow: false, white: false },
+        enemies: { purple: 0 },
+        spawn: { white: 0, purple: 10, yellow: 0 },
+      },
+      {
+        name: "LEVEL 3",
+        task: "Collect 5 yellow ice creams — but if you touch purple ice cream, you lose.",
+        timeLimit: 9999, // no timer requested; still shown as ∞
+        goal: { white: 0, purple: 0, yellow: 5 },
+        forbidden: { purple: true, yellow: false, white: false },
+        enemies: { purple: 2 }, // flying purple enemies
+        spawn: { white: 0, purple: 3, yellow: 7 }, // some purple pickups exist and are forbidden
+      },
+      {
+        name: "LEVEL 4",
+        task: "Collect 4 blue ice creams and 4 yellow ice creams.",
+        timeLimit: 9999, // user didn't specify a timer; can be changed
+        goal: { white: 0, purple: 0, yellow: 4, blue: 4 }, // blue will be represented by WHITE sprite tinted (no asset given)
+        forbidden: { purple: false, yellow: false, white: false, blue: false },
+        enemies: { purple: 0 },
+        spawn: { yellow: 7, blue: 7 },
+      },
+    ];
+
+    // Note: "blue" asset wasn't provided. We'll tint the WHITE ice cream sprite to blue for Level 4.
+    // If you later add icecream-blue.png, say the filename and it can be swapped.
+
+    const STATE = {
+      assetsReady: false,
+      imgs: {},
+
+      running: false,
+      currentLevelIndex: 0,
+
+      // timing
+      timeLeft: 0,
+      lastT: 0,
+
+      // canvas
+      ctx: null,
+      w: 0,
+      h: 0,
+
+      // input
+      keys: new Set(),
+
+      // entities
+      player: { x: 0, y: 0, r: 26, vx: 0, vy: 0, speed: 420 },
+      pickups: [], // {type,x,y,r,vx,vy,isEnemy}
+      collected: { white:0, purple:0, yellow:0, blue:0 },
+
+      // FX
+      flashT: 0,
+      shakeT: 0,
+    };
+
+    function clamp(v, a, b){ return Math.max(a, Math.min(b, v)); }
+    function rand(a,b){ return a + Math.random()*(b-a); }
+    function dist2(ax,ay,bx,by){ const dx=ax-bx, dy=ay-by; return dx*dx+dy*dy; }
+
+    // ---------- UI helpers ----------
+    function show(el){ el.classList.remove("hidden"); }
+    function hide(el){ el.classList.add("hidden"); }
+
+    function goMenu(){
+      STATE.running = false;
+      hide(ui.canvas);
+      hide(ui.hud);
+      hide(ui.levelOverlay);
+      hide(ui.gameOverOverlay);
+      show(ui.intro);
+    }
+
+    function showLevelOverlay(){
+      const lvl = LEVELS[STATE.currentLevelIndex];
+      ui.levelTitle.textContent = lvl.name;
+      ui.levelTask.textContent = lvl.task;
+      ui.btnLevelGo.textContent = "./ " + lvl.name;
+      show(ui.levelOverlay);
+    }
+
+    function hideLevelOverlay(){
+      hide(ui.levelOverlay);
+    }
+
+    function showGameOver(reason){
+      STATE.running = false;
+      ui.gameOverReason.textContent = reason;
+      const lvl = LEVELS[STATE.currentLevelIndex];
+      const collectedLine =
+        `Collected: W ${STATE.collected.white} / P ${STATE.collected.purple} / Y ${STATE.collected.yellow} / B ${STATE.collected.blue}`;
+      ui.gameOverMeta.textContent = `${lvl.name} — ${collectedLine}`;
+      show(ui.gameOverOverlay);
+    }
+
+    // ---------- Level logic ----------
+    function resetForLevel(levelIndex){
+      STATE.currentLevelIndex = levelIndex;
+      STATE.pickups = [];
+      STATE.collected = { white:0, purple:0, yellow:0, blue:0 };
+
+      // player
+      STATE.player.x = STATE.w * 0.5;
+      STATE.player.y = STATE.h * 0.62;
+      STATE.player.vx = 0;
+      STATE.player.vy = 0;
+
+      const lvl = LEVELS[levelIndex];
+      STATE.timeLeft = lvl.timeLimit;
+
+      // spawn pickups
+      spawnPickupsForLevel(lvl);
+
+      // update HUD
+      updateHUD(0);
+    }
+
+    function spawnPickupsForLevel(lvl){
+      // helper spawn
+      const spawnOne = (type, isEnemy=false) => {
+        const r = 20;
+        let x = rand(40, STATE.w - 40);
+        let y = rand(90, STATE.h - 60);
+
+        // keep away from player initial
+        if (dist2(x,y,STATE.player.x,STATE.player.y) < 180*180){
+          x = rand(40, STATE.w - 40);
+          y = rand(90, STATE.h - 60);
+        }
+
+        const baseV = isEnemy ? rand(120, 180) : rand(40, 85);
+        const a = rand(0, Math.PI*2);
+
+        STATE.pickups.push({
+          type,
+          x, y,
+          r,
+          vx: Math.cos(a)*baseV,
+          vy: Math.sin(a)*baseV,
+          isEnemy
+        });
+      };
+
+      const spawn = lvl.spawn || {};
+      if (spawn.white) for (let i=0;i<spawn.white;i++) spawnOne("white", false);
+      if (spawn.purple) for (let i=0;i<spawn.purple;i++) spawnOne("purple", false);
+      if (spawn.yellow) for (let i=0;i<spawn.yellow;i++) spawnOne("yellow", false);
+      if (spawn.blue) for (let i=0;i<spawn.blue;i++) spawnOne("blue", false);
+
+      const enemies = (lvl.enemies && lvl.enemies.purple) ? lvl.enemies.purple : 0;
+      for (let i=0;i<enemies;i++) spawnOne("purple", true);
+    }
+
+    function levelGoalTotal(lvl){
+      return (lvl.goal.white||0) + (lvl.goal.purple||0) + (lvl.goal.yellow||0) + (lvl.goal.blue||0);
+    }
+
+    function levelCollectedForGoal(lvl){
+      let sum = 0;
+      if (lvl.goal.white) sum += Math.min(STATE.collected.white, lvl.goal.white);
+      if (lvl.goal.purple) sum += Math.min(STATE.collected.purple, lvl.goal.purple);
+      if (lvl.goal.yellow) sum += Math.min(STATE.collected.yellow, lvl.goal.yellow);
+      if (lvl.goal.blue) sum += Math.min(STATE.collected.blue, lvl.goal.blue);
+      return sum;
+    }
+
+    function checkWin(){
+      const lvl = LEVELS[STATE.currentLevelIndex];
+      const okWhite = (STATE.collected.white >= (lvl.goal.white||0));
+      const okPurple = (STATE.collected.purple >= (lvl.goal.purple||0));
+      const okYellow = (STATE.collected.yellow >= (lvl.goal.yellow||0));
+      const okBlue = (STATE.collected.blue >= (lvl.goal.blue||0));
+      return okWhite && okPurple && okYellow && okBlue;
+    }
+
+    function nextLevelOrFinish(){
+      if (STATE.currentLevelIndex + 1 < LEVELS.length){
+        resetForLevel(STATE.currentLevelIndex + 1);
+        showLevelOverlay();
+      } else {
+        // Finished campaign
+        STATE.running = false;
+        hide(ui.levelOverlay);
+        showGameOver("Campaign complete. David finally gets the ice cream.");
+      }
+    }
+
+    // ---------- Game loop ----------
+    function resizeCanvas(){
+      const dpr = Math.max(1, Math.min(2, window.devicePixelRatio || 1));
+      STATE.w = window.innerWidth;
+      STATE.h = window.innerHeight;
+
+      ui.canvas.width = Math.floor(STATE.w * dpr);
+      ui.canvas.height = Math.floor(STATE.h * dpr);
+      ui.canvas.style.width = STATE.w + "px";
+      ui.canvas.style.height = STATE.h + "px";
+
+      STATE.ctx.setTransform(dpr,0,0,dpr,0,0);
+    }
+
+    function update(dt){
+      const lvl = LEVELS[STATE.currentLevelIndex];
+
+      // timer
+      if (lvl.timeLimit < 9000){
+        STATE.timeLeft -= dt;
+        if (STATE.timeLeft <= 0){
+          STATE.timeLeft = 0;
+          showGameOver("Time is up.");
+          return;
+        }
+      }
+
+      // movement
+      let mx = 0, my = 0;
+      if (STATE.keys.has("ArrowLeft") || STATE.keys.has("a") || STATE.keys.has("A")) mx -= 1;
+      if (STATE.keys.has("ArrowRight") || STATE.keys.has("d") || STATE.keys.has("D")) mx += 1;
+      if (STATE.keys.has("ArrowUp") || STATE.keys.has("w") || STATE.keys.has("W")) my -= 1;
+      if (STATE.keys.has("ArrowDown") || STATE.keys.has("s") || STATE.keys.has("S")) my += 1;
+
+      const len = Math.hypot(mx,my) || 1;
+      mx /= len; my /= len;
+
+      STATE.player.x += mx * STATE.player.speed * dt;
+      STATE.player.y += my * STATE.player.speed * dt;
+
+      // clamp
+      STATE.player.x = clamp(STATE.player.x, 28, STATE.w - 28);
+      STATE.player.y = clamp(STATE.player.y, 72, STATE.h - 28);
+
+      // pickups motion + bounce
+      for (const p of STATE.pickups){
+        p.x += p.vx * dt;
+        p.y += p.vy * dt;
+
+        const pad = 26;
+        if (p.x < pad){ p.x = pad; p.vx *= -1; }
+        if (p.x > STATE.w - pad){ p.x = STATE.w - pad; p.vx *= -1; }
+        if (p.y < 72){ p.y = 72; p.vy *= -1; }
+        if (p.y > STATE.h - pad){ p.y = STATE.h - pad; p.vy *= -1; }
+
+        // enemies slightly drift toward player for pressure
+        if (p.isEnemy){
+          const dx = STATE.player.x - p.x;
+          const dy = STATE.player.y - p.y;
+          const d = Math.hypot(dx,dy) || 1;
+          p.vx += (dx/d) * 40 * dt;
+          p.vy += (dy/d) * 40 * dt;
+          // cap
+          const sp = Math.hypot(p.vx,p.vy);
+          const cap = 220;
+          if (sp > cap){
+            p.vx = p.vx / sp * cap;
+            p.vy = p.vy / sp * cap;
+          }
+        }
+      }
+
+      // collisions
+      for (let i = STATE.pickups.length - 1; i >= 0; i--){
+        const p = STATE.pickups[i];
+        const rr = (STATE.player.r + p.r);
+        if (dist2(STATE.player.x, STATE.player.y, p.x, p.y) <= rr*rr){
+          // forbidden type?
+          if (lvl.forbidden && lvl.forbidden[p.type]){
+            showGameOver("You touched a forbidden ice cream.");
+            return;
+          }
+          // enemy purple always kills (Level 3)
+          if (p.isEnemy){
+            showGameOver("You touched a purple enemy.");
+            return;
+          }
+
+          // collect
+          STATE.pickups.splice(i, 1);
+          if (p.type === "white") STATE.collected.white++;
+          if (p.type === "purple") STATE.collected.purple++;
+          if (p.type === "yellow") STATE.collected.yellow++;
+          if (p.type === "blue") STATE.collected.blue++;
+
+          // small pickup flash
+          STATE.flashT = 0.08;
+
+          if (checkWin()){
+            nextLevelOrFinish();
+            return;
+          }
+        }
+      }
+
+      // FX timers
+      STATE.flashT = Math.max(0, STATE.flashT - dt);
+    }
+
+    function draw(){
+      const ctx = STATE.ctx;
+      ctx.clearRect(0,0,STATE.w,STATE.h);
+
+      // draw pickups
+      for (const p of STATE.pickups){
+        drawIceCream(p);
+      }
+
+      // draw player
+      drawPlayer();
+
+      // flash overlay
+      if (STATE.flashT > 0){
+        ctx.save();
+        ctx.globalAlpha = Math.min(0.25, STATE.flashT * 4);
+        ctx.fillStyle = "white";
+        ctx.fillRect(0,0,STATE.w,STATE.h);
+        ctx.restore();
+      }
+    }
+
+    function drawPlayer(){
+      const ctx = STATE.ctx;
+      const img = STATE.imgs.player;
+      const size = 78;
+
+      // subtle hover
+      const t = performance.now() * 0.002;
+      const bob = Math.sin(t) * 2;
+
+      ctx.save();
+      ctx.translate(STATE.player.x, STATE.player.y + bob);
+
+      // shadow
+      ctx.globalAlpha = 0.35;
+      ctx.fillStyle = "black";
+      ctx.beginPath();
+      ctx.ellipse(0, size*0.46, size*0.32, size*0.14, 0, 0, Math.PI*2);
+      ctx.fill();
+      ctx.globalAlpha = 1;
+
+      ctx.imageSmoothingEnabled = true;
+      ctx.drawImage(img, -size/2, -size/2, size, size);
+      ctx.restore();
+    }
+
+    function drawIceCream(p){
+      const ctx = STATE.ctx;
+
+      let img;
+      if (p.type === "white") img = STATE.imgs.white;
+      if (p.type === "purple") img = STATE.imgs.purple;
+      if (p.type === "yellow") img = STATE.imgs.yellow;
+      if (p.type === "blue") img = STATE.imgs.white; // tinted
+
+      const size = p.isEnemy ? 62 : 54;
+
+      // enemy aura
+      if (p.isEnemy){
+        ctx.save();
+        ctx.globalAlpha = 0.22;
+        ctx.fillStyle = "#b46cff";
+        ctx.beginPath();
+        ctx.arc(p.x, p.y, 38, 0, Math.PI*2);
+        ctx.fill();
+        ctx.restore();
+      }
+
+      ctx.save();
+      ctx.translate(p.x, p.y);
+
+      // small rotation for life
+      const t = performance.now() * 0.001;
+      ctx.rotate(Math.sin(t + (p.x+p.y)*0.01) * (p.isEnemy ? 0.18 : 0.10));
+
+      if (p.type === "blue"){
+        // tint white sprite to blue using multiply-style overlay
+        ctx.drawImage(img, -size/2, -size/2, size, size);
+        ctx.globalCompositeOperation = "source-atop";
+        ctx.globalAlpha = 0.55;
+        ctx.fillStyle = "#4db7ff";
+        ctx.fillRect(-size/2, -size/2, size, size);
+        ctx.globalCompositeOperation = "source-over";
+        ctx.globalAlpha = 1;
+      } else {
+        ctx.drawImage(img, -size/2, -size/2, size, size);
+      }
+
+      ctx.restore();
+    }
+
+    function updateHUD(){
+      const lvl = LEVELS[STATE.currentLevelIndex];
+
+      ui.hudLevel.textContent = `${STATE.currentLevelIndex + 1} / ${LEVELS.length}`;
+
+      // time
+      if (lvl.timeLimit >= 9000){
+        ui.hudTime.textContent = "∞";
+      } else {
+        ui.hudTime.textContent = STATE.timeLeft.toFixed(1);
+      }
+
+      // goal text
+      const parts = [];
+      if (lvl.goal.white) parts.push(`W:${lvl.goal.white}`);
+      if (lvl.goal.purple) parts.push(`P:${lvl.goal.purple}`);
+      if (lvl.goal.yellow) parts.push(`Y:${lvl.goal.yellow}`);
+      if (lvl.goal.blue) parts.push(`B:${lvl.goal.blue}`);
+      ui.hudGoal.textContent = parts.join(" ");
+
+      // collected
+      const cParts = [];
+      if (lvl.goal.white) cParts.push(`W:${STATE.collected.white}`);
+      if (lvl.goal.purple) cParts.push(`P:${STATE.collected.purple}`);
+      if (lvl.goal.yellow) cParts.push(`Y:${STATE.collected.yellow}`);
+      if (lvl.goal.blue) cParts.push(`B:${STATE.collected.blue}`);
+      ui.hudCollected.textContent = cParts.join(" ");
+
+      const total = Math.max(1, levelGoalTotal(lvl));
+      const got = levelCollectedForGoal(lvl);
+      const pct = Math.round((got / total) * 100);
+      ui.hudProgressText.textContent = pct + "%";
+      ui.hudProgressFill.style.width = pct + "%";
+    }
+
+    function loop(t){
+      const now = t || performance.now();
+      const dt = Math.min(0.035, (now - STATE.lastT) / 1000 || 0);
+      STATE.lastT = now;
+
+      if (STATE.running){
+        update(dt);
+        updateHUD();
+        draw();
+      }
+
+      requestAnimationFrame(loop);
+    }
+
+    // ---------- Controls ----------
+    window.addEventListener("keydown", (e) => {
+      // prevent page scroll with arrows
+      if (["ArrowUp","ArrowDown","ArrowLeft","ArrowRight"," "].includes(e.key)) e.preventDefault();
+      STATE.keys.add(e.key);
+    }, { passive:false });
+
+    window.addEventListener("keyup", (e) => {
+      STATE.keys.delete(e.key);
+    });
+
+    // ---------- Buttons ----------
+    ui.btnStart.addEventListener("click", async () => {
+      await ensureAssets();
+      hide(ui.intro);
+      show(ui.canvas);
+      show(ui.hud);
+      resetForLevel(0);
+      showLevelOverlay();
+    });
+
+    ui.btnBackMenuFromLevel.addEventListener("click", () => {
+      goMenu();
+    });
+
+    ui.btnLevelGo.addEventListener("click", () => {
+      hideLevelOverlay();
+      hide(ui.gameOverOverlay);
+      STATE.running = true;
+    });
+
+    ui.btnRestart.addEventListener("click", () => {
+      hide(ui.gameOverOverlay);
+      resetForLevel(STATE.currentLevelIndex);
+      showLevelOverlay();
+    });
+
+    ui.btnMenu.addEventListener("click", () => {
+      goMenu();
+    });
+
+    // ---------- Assets init ----------
+    async function ensureAssets(){
+      if (STATE.assetsReady) return;
+      const [player, white, purple, yellow] = await Promise.all([
+        loadImage(ASSETS.player),
+        loadImage(ASSETS.white),
+        loadImage(ASSETS.purple),
+        loadImage(ASSETS.yellow),
+      ]);
+      STATE.imgs = { player, white, purple, yellow };
+      STATE.assetsReady = true;
+    }
+
+    // ---------- Boot ----------
+    (function init(){
+      STATE.ctx = ui.canvas.getContext("2d", { alpha: true });
+      resizeCanvas();
+      window.addEventListener("resize", resizeCanvas);
+      requestAnimationFrame(loop);
+    })();
+  </script>
+</body>
+</html>
