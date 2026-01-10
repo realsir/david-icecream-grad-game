@@ -5,7 +5,6 @@
   <meta name="viewport" content="width=device-width,initial-scale=1" />
   <title>David & Ice Cream — Quest</title>
 
-  <!-- Stylish pixel-like font -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap" rel="stylesheet">
@@ -39,12 +38,21 @@
 
     .hidden{ display:none !important; }
 
-    /* soft vignette for readability */
     .screen::before{
       content:"";
       position:absolute; inset:0;
       background: radial-gradient(1200px 700px at 50% 40%, rgba(0,0,0,0.18), rgba(0,0,0,0.58));
       pointer-events:none;
+    }
+
+    .card{
+      position:relative;
+      width:min(920px, 94vw);
+      background: linear-gradient(180deg, rgba(22,26,38,0.92), rgba(10,12,18,0.86));
+      border:1px solid rgba(255,255,255,0.16);
+      border-radius:18px;
+      box-shadow: 0 20px 85px rgba(0,0,0,0.55);
+      overflow:hidden;
     }
 
     .card-inner{
@@ -110,7 +118,6 @@
       background: rgba(255,255,255,0.06);
     }
 
-    /* Game UI top bar */
     #hud{
       position:fixed;
       top:14px; left:50%;
@@ -167,7 +174,6 @@
       background: linear-gradient(90deg, rgba(180,108,255,0.85), rgba(95,225,255,0.85));
     }
 
-    /* Canvas */
     #game{
       position:fixed;
       inset:0;
@@ -177,7 +183,6 @@
       z-index:1;
     }
 
-    /* Overlay panels (level start / game over) */
     .overlay{
       position:fixed;
       inset:0;
@@ -228,7 +233,47 @@
       flex-wrap:wrap;
     }
 
-    /* Mobile tweaks */
+    .level-grid{
+      display:grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap:12px;
+      padding: 6px 0 4px 0;
+    }
+    .level-grid .btn{ width:100%; }
+
+    @media (max-width: 820px){
+      .level-grid{ grid-template-columns: repeat(2, minmax(0, 1fr)); }
+    }
+    @media (max-width: 520px){
+      .level-grid{ grid-template-columns: 1fr; }
+    }
+
+    #levelsGrid .btn{
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      gap:12px;
+    }
+    .lvl-badge{
+      font-size:9px;
+      padding:6px 10px;
+      border-radius:999px;
+      border:1px solid rgba(255,255,255,0.18);
+      background: rgba(255,255,255,0.08);
+      color: rgba(255,255,255,0.78);
+      white-space: nowrap;
+    }
+    .lvl-badge.done{
+      background: rgba(55, 214, 122, 0.16);
+      border-color: rgba(55, 214, 122, 0.32);
+      color: rgba(180, 255, 205, 0.95);
+    }
+    .lvl-badge.todo{
+      background: rgba(255,255,255,0.07);
+      border-color: rgba(255,255,255,0.16);
+      color: rgba(255,255,255,0.76);
+    }
+
     @media (max-width: 560px){
       .intro-text{ font-size:10px; }
       .btn{ font-size:11px; padding: 12px 12px; }
@@ -240,7 +285,6 @@
 </head>
 
 <body>
-  <!-- Intro screen -->
   <section id="intro" class="screen">
     <div class="card">
       <div class="card-inner">
@@ -260,15 +304,61 @@
     </div>
   </section>
 
-  <!-- Game -->
+  <section id="levelSelect" class="screen hidden">
+    <div class="card">
+      <div class="card-inner">
+        <div class="intro-hero" style="padding-bottom:0;">
+          <div style="font-size:13px; line-height:1.5;">SELECT LEVEL</div>
+          <div class="intro-text" style="padding-bottom:0;">
+            Choose a level. Each level starts only after you press its button.
+          </div>
+        </div>
+
+        <div style="display:flex; flex-direction:column; gap:12px;">
+          <div style="display:flex; align-items:center; justify-content:space-between; gap:12px;">
+            <div style="font-size:10px; color:rgba(255,255,255,0.82);">PROGRESS</div>
+            <div id="levelsProgressText" style="font-size:10px; color:rgba(255,255,255,0.82);">0 / 6</div>
+          </div>
+          <div style="height:12px; border-radius:999px; background:rgba(255,255,255,0.10); border:1px solid rgba(255,255,255,0.14); overflow:hidden;">
+            <div id="levelsProgressFill" style="height:100%; width:0%; background:linear-gradient(90deg, rgba(180,108,255,0.85), rgba(95,225,255,0.85));"></div>
+          </div>
+
+          <div class="level-grid" id="levelsGrid">
+            <button class="btn" data-level="0">
+              <span>./ LEVEL 1</span><span data-status class="lvl-badge todo">NOT DONE</span>
+            </button>
+            <button class="btn" data-level="1">
+              <span>./ LEVEL 2</span><span data-status class="lvl-badge todo">NOT DONE</span>
+            </button>
+            <button class="btn" data-level="2">
+              <span>./ LEVEL 3</span><span data-status class="lvl-badge todo">NOT DONE</span>
+            </button>
+            <button class="btn" data-level="3">
+              <span>./ LEVEL 4</span><span data-status class="lvl-badge todo">NOT DONE</span>
+            </button>
+            <button class="btn" data-level="4">
+              <span>./ LEVEL 5</span><span data-status class="lvl-badge todo">NOT DONE</span>
+            </button>
+            <button class="btn" data-level="5">
+              <span>./ LEVEL 6</span><span data-status class="lvl-badge todo">NOT DONE</span>
+            </button>
+          </div>
+        </div>
+
+        <div class="button-row">
+          <button id="btnBackToIntro" class="btn btn-ghost">./ MENU</button>
+        </div>
+      </div>
+    </div>
+  </section>
+
   <canvas id="game" class="hidden"></canvas>
 
-  <!-- HUD -->
   <div id="hud" class="hidden">
     <div class="hud-block">
       <div class="hud-line">
         <span>LEVEL</span>
-        <span id="hudLevel">1 / 4</span>
+        <span id="hudLevel">1 / 6</span>
       </div>
       <div class="hud-line">
         <span>TIME</span>
@@ -298,33 +388,30 @@
     </div>
   </div>
 
-  <!-- Level start overlay -->
   <div id="levelOverlay" class="overlay hidden">
     <div class="panel">
       <h2 id="levelTitle">LEVEL 1</h2>
       <p id="levelTask">Task text…</p>
       <div class="panel-actions">
         <button id="btnLevelGo" class="btn">./ LEVEL 1</button>
-        <button id="btnBackMenuFromLevel" class="btn btn-ghost">./ MENU</button>
+        <button id="btnBackMenuFromLevel" class="btn btn-ghost">./ LEVELS</button>
       </div>
     </div>
   </div>
 
-  <!-- Game over overlay -->
   <div id="gameOverOverlay" class="overlay hidden">
     <div class="panel">
-      <h2>GAME OVER</h2>
+      <h2 id="gameOverTitle">GAME OVER</h2>
       <p id="gameOverReason">You failed the task.</p>
       <div class="meta" id="gameOverMeta">—</div>
       <div class="panel-actions">
         <button id="btnRestart" class="btn btn-danger">./ RESTART</button>
-        <button id="btnMenu" class="btn btn-ghost">./ MENU</button>
+        <button id="btnLevels" class="btn btn-ghost">./ LEVELS</button>
       </div>
     </div>
   </div>
 
   <script>
-    // ---------- Asset loading ----------
     function loadImage(src){
       return new Promise((resolve, reject) => {
         const img = new Image();
@@ -343,6 +430,7 @@
 
     const ui = {
       intro: document.getElementById("intro"),
+      levelSelect: document.getElementById("levelSelect"),
       canvas: document.getElementById("game"),
       hud: document.getElementById("hud"),
 
@@ -360,15 +448,16 @@
       btnBackMenuFromLevel: document.getElementById("btnBackMenuFromLevel"),
 
       gameOverOverlay: document.getElementById("gameOverOverlay"),
+      gameOverTitle: document.getElementById("gameOverTitle"),
       gameOverReason: document.getElementById("gameOverReason"),
       gameOverMeta: document.getElementById("gameOverMeta"),
 
       btnStart: document.getElementById("btnStart"),
+      btnBackToIntro: document.getElementById("btnBackToIntro"),
       btnRestart: document.getElementById("btnRestart"),
-      btnMenu: document.getElementById("btnMenu"),
+      btnLevels: document.getElementById("btnLevels"),
     };
 
-    // ---------- Game config ----------
     const LEVELS = [
       {
         name: "LEVEL 1",
@@ -376,8 +465,8 @@
         timeLimit: 30,
         goal: { white: 10, purple: 0, yellow: 0 },
         forbidden: { purple: false, yellow: false, white: false },
-        enemies: { purple: 0 }, // extra moving enemies
-        spawn: { white: 10, purple: 0, yellow: 0 },
+        enemies: { purple: 0 },
+        spawn: { white: 12, purple: 0, yellow: 0 },
       },
       {
         name: "LEVEL 2",
@@ -386,37 +475,97 @@
         goal: { white: 0, purple: 10, yellow: 0 },
         forbidden: { purple: false, yellow: false, white: false },
         enemies: { purple: 0 },
-        spawn: { white: 0, purple: 10, yellow: 0 },
+        spawn: { white: 0, purple: 12, yellow: 0 },
       },
       {
         name: "LEVEL 3",
         task: "Collect 5 yellow ice creams — but if you touch purple ice cream, you lose.",
-        timeLimit: 9999, // no timer requested; still shown as ∞
+        timeLimit: 9999,
         goal: { white: 0, purple: 0, yellow: 5 },
         forbidden: { purple: true, yellow: false, white: false },
-        enemies: { purple: 2 }, // flying purple enemies
-        spawn: { white: 0, purple: 3, yellow: 7 }, // some purple pickups exist and are forbidden
+        enemies: { purple: 2 },
+        spawn: { white: 0, purple: 3, yellow: 8 },
       },
       {
         name: "LEVEL 4",
-        task: "Collect 4 blue ice creams and 4 yellow ice creams.",
-        timeLimit: 9999, // user didn't specify a timer; can be changed
-        goal: { white: 0, purple: 0, yellow: 4, blue: 4 }, // blue will be represented by WHITE sprite tinted (no asset given)
-        forbidden: { purple: false, yellow: false, white: false, blue: false },
+        task: "Collect 12 yellow ice creams.",
+        timeLimit: 9999,
+        goal: { white: 0, purple: 0, yellow: 12 },
+        forbidden: { purple: false, yellow: false, white: false },
         enemies: { purple: 0 },
-        spawn: { yellow: 7, blue: 7 },
+        spawn: { white: 0, purple: 0, yellow: 16 },
+      },
+      {
+        name: "LEVEL 5",
+        task: "Collect 30 yellow ice creams",
+        timeLimit: 9999,
+        goal: { white: 0, purple: 0, yellow: 30 },
+        forbidden: { purple: false, yellow: false, white: false },
+        enemies: { purple: 0 },
+        spawn: { white: 0, purple: 0, yellow: 34 },
+      },
+      {
+        name: "LEVEL 6",
+        task: "Collect 20 white ice creams. Two enemies are chasing you.",
+        timeLimit: 9999,
+        goal: { white: 20, purple: 0, yellow: 0 },
+        forbidden: { purple: false, yellow: false, white: false },
+        enemies: { purple: 2 },
+        spawn: { white: 24, purple: 0, yellow: 0 },
       },
     ];
 
-    // Note: "blue" asset wasn't provided. We'll tint the WHITE ice cream sprite to blue for Level 4.
-    // If you later add icecream-blue.png, say the filename and it can be swapped.
+    const SAVE_KEY = "david_icecream_levels_done_v1";
 
+    function loadDoneArray(){
+      try{
+        const raw = localStorage.getItem(SAVE_KEY);
+        const arr = raw ? JSON.parse(raw) : [];
+        if (!Array.isArray(arr)) return new Array(LEVELS.length).fill(false);
+        const out = new Array(LEVELS.length).fill(false);
+        for (let i=0;i<out.length;i++) out[i] = !!arr[i];
+        return out;
+      }catch(e){
+        return new Array(LEVELS.length).fill(false);
+      }
+    }
+
+    function saveDoneArray(done){
+      localStorage.setItem(SAVE_KEY, JSON.stringify(done));
+    }
+
+    function renderLevelsProgressUI(){
+      const grid = document.getElementById("levelsGrid");
+      const text = document.getElementById("levelsProgressText");
+      const fill = document.getElementById("levelsProgressFill");
+      if (!grid || !text || !fill) return;
+
+      const total = LEVELS.length;
+      const doneCount = STATE.doneLevels.filter(Boolean).length;
+
+      text.textContent = `${doneCount} / ${total}`;
+      fill.style.width = `${Math.round((doneCount / Math.max(1,total)) * 100)}%`;
+
+      [...grid.querySelectorAll("button[data-level]")].forEach((btn) => {
+        const idx = Number(btn.getAttribute("data-level"));
+        const badge = btn.querySelector("[data-status]");
+        if (!badge || !Number.isFinite(idx)) return;
+
+        const isDone = !!STATE.doneLevels[idx];
+        badge.textContent = isDone ? "DONE" : "NOT DONE";
+        badge.classList.toggle("done", isDone);
+        badge.classList.toggle("todo", !isDone);
+      });
+    }
+
+    // ---------- Game state ----------
     const STATE = {
       assetsReady: false,
       imgs: {},
 
       running: false,
       currentLevelIndex: 0,
+      pendingStartLevelIndex: 0,
 
       // timing
       timeLeft: 0,
@@ -432,12 +581,14 @@
 
       // entities
       player: { x: 0, y: 0, r: 26, vx: 0, vy: 0, speed: 420 },
-      pickups: [], // {type,x,y,r,vx,vy,isEnemy}
-      collected: { white:0, purple:0, yellow:0, blue:0 },
+      pickups: [],
+      collected: { white:0, purple:0, yellow:0 },
 
       // FX
       flashT: 0,
-      shakeT: 0,
+
+      // progress
+      doneLevels: loadDoneArray(),
     };
 
     function clamp(v, a, b){ return Math.max(a, Math.min(b, v)); }
@@ -448,20 +599,42 @@
     function show(el){ el.classList.remove("hidden"); }
     function hide(el){ el.classList.add("hidden"); }
 
-    function goMenu(){
+    function showIntro(){
       STATE.running = false;
       hide(ui.canvas);
       hide(ui.hud);
       hide(ui.levelOverlay);
       hide(ui.gameOverOverlay);
+      hide(ui.levelSelect);
       show(ui.intro);
     }
 
-    function showLevelOverlay(){
-      const lvl = LEVELS[STATE.currentLevelIndex];
+    function showGameScene(){
+      hide(ui.intro);
+      hide(ui.levelSelect);
+      show(ui.canvas);
+      show(ui.hud);
+    }
+
+    function showLevelsMenu(){
+      STATE.running = false;
+      hide(ui.levelOverlay);
+      hide(ui.gameOverOverlay);
+      hide(ui.canvas);
+      hide(ui.hud);
+      hide(ui.intro);
+      show(ui.levelSelect);
+      renderLevelsProgressUI();
+    }
+
+    function showLevelOverlay(levelIndex){
+      const lvl = LEVELS[levelIndex];
+      STATE.pendingStartLevelIndex = levelIndex;
+
       ui.levelTitle.textContent = lvl.name;
       ui.levelTask.textContent = lvl.task;
       ui.btnLevelGo.textContent = "./ " + lvl.name;
+
       show(ui.levelOverlay);
     }
 
@@ -471,11 +644,14 @@
 
     function showGameOver(reason){
       STATE.running = false;
+      ui.gameOverTitle.textContent = "GAME OVER";
       ui.gameOverReason.textContent = reason;
+
       const lvl = LEVELS[STATE.currentLevelIndex];
       const collectedLine =
-        `Collected: W ${STATE.collected.white} / P ${STATE.collected.purple} / Y ${STATE.collected.yellow} / B ${STATE.collected.blue}`;
+        `Collected: W ${STATE.collected.white} / P ${STATE.collected.purple} / Y ${STATE.collected.yellow}`;
       ui.gameOverMeta.textContent = `${lvl.name} — ${collectedLine}`;
+
       show(ui.gameOverOverlay);
     }
 
@@ -483,9 +659,8 @@
     function resetForLevel(levelIndex){
       STATE.currentLevelIndex = levelIndex;
       STATE.pickups = [];
-      STATE.collected = { white:0, purple:0, yellow:0, blue:0 };
+      STATE.collected = { white:0, purple:0, yellow:0 };
 
-      // player
       STATE.player.x = STATE.w * 0.5;
       STATE.player.y = STATE.h * 0.62;
       STATE.player.vx = 0;
@@ -494,33 +669,26 @@
       const lvl = LEVELS[levelIndex];
       STATE.timeLeft = lvl.timeLimit;
 
-      // spawn pickups
       spawnPickupsForLevel(lvl);
-
-      // update HUD
-      updateHUD(0);
+      updateHUD();
     }
 
     function spawnPickupsForLevel(lvl){
-      // helper spawn
       const spawnOne = (type, isEnemy=false) => {
         const r = 20;
         let x = rand(40, STATE.w - 40);
         let y = rand(90, STATE.h - 60);
 
-        // keep away from player initial
         if (dist2(x,y,STATE.player.x,STATE.player.y) < 180*180){
           x = rand(40, STATE.w - 40);
           y = rand(90, STATE.h - 60);
         }
 
-        const baseV = isEnemy ? rand(120, 180) : rand(40, 85);
+        const baseV = isEnemy ? rand(130, 190) : rand(40, 85);
         const a = rand(0, Math.PI*2);
 
         STATE.pickups.push({
-          type,
-          x, y,
-          r,
+          type, x, y, r,
           vx: Math.cos(a)*baseV,
           vy: Math.sin(a)*baseV,
           isEnemy
@@ -531,14 +699,13 @@
       if (spawn.white) for (let i=0;i<spawn.white;i++) spawnOne("white", false);
       if (spawn.purple) for (let i=0;i<spawn.purple;i++) spawnOne("purple", false);
       if (spawn.yellow) for (let i=0;i<spawn.yellow;i++) spawnOne("yellow", false);
-      if (spawn.blue) for (let i=0;i<spawn.blue;i++) spawnOne("blue", false);
 
-      const enemies = (lvl.enemies && lvl.enemies.purple) ? lvl.enemies.purple : 0;
-      for (let i=0;i<enemies;i++) spawnOne("purple", true);
+      const enemiesPurple = (lvl.enemies && lvl.enemies.purple) ? lvl.enemies.purple : 0;
+      for (let i=0;i<enemiesPurple;i++) spawnOne("purple", true);
     }
 
     function levelGoalTotal(lvl){
-      return (lvl.goal.white||0) + (lvl.goal.purple||0) + (lvl.goal.yellow||0) + (lvl.goal.blue||0);
+      return (lvl.goal.white||0) + (lvl.goal.purple||0) + (lvl.goal.yellow||0);
     }
 
     function levelCollectedForGoal(lvl){
@@ -546,7 +713,6 @@
       if (lvl.goal.white) sum += Math.min(STATE.collected.white, lvl.goal.white);
       if (lvl.goal.purple) sum += Math.min(STATE.collected.purple, lvl.goal.purple);
       if (lvl.goal.yellow) sum += Math.min(STATE.collected.yellow, lvl.goal.yellow);
-      if (lvl.goal.blue) sum += Math.min(STATE.collected.blue, lvl.goal.blue);
       return sum;
     }
 
@@ -555,19 +721,25 @@
       const okWhite = (STATE.collected.white >= (lvl.goal.white||0));
       const okPurple = (STATE.collected.purple >= (lvl.goal.purple||0));
       const okYellow = (STATE.collected.yellow >= (lvl.goal.yellow||0));
-      const okBlue = (STATE.collected.blue >= (lvl.goal.blue||0));
-      return okWhite && okPurple && okYellow && okBlue;
+      return okWhite && okPurple && okYellow;
     }
 
-    function nextLevelOrFinish(){
+    // After win: mark as DONE and show next level overlay (no auto-start)
+    function winAndPromptNext(){
+      STATE.doneLevels[STATE.currentLevelIndex] = true;
+      saveDoneArray(STATE.doneLevels);
+
       if (STATE.currentLevelIndex + 1 < LEVELS.length){
-        resetForLevel(STATE.currentLevelIndex + 1);
-        showLevelOverlay();
-      } else {
-        // Finished campaign
+        const nextIndex = STATE.currentLevelIndex + 1;
+        resetForLevel(nextIndex);
+        showLevelOverlay(nextIndex);
         STATE.running = false;
-        hide(ui.levelOverlay);
-        showGameOver("Campaign complete. David finally gets the ice cream.");
+      } else {
+        STATE.running = false;
+        ui.gameOverTitle.textContent = "YOU WIN";
+        ui.gameOverReason.textContent = "Campaign complete. David finally gets the ice cream.";
+        ui.gameOverMeta.textContent = `Finished: ${LEVELS.length} levels.`;
+        show(ui.gameOverOverlay);
       }
     }
 
@@ -588,7 +760,6 @@
     function update(dt){
       const lvl = LEVELS[STATE.currentLevelIndex];
 
-      // timer
       if (lvl.timeLimit < 9000){
         STATE.timeLeft -= dt;
         if (STATE.timeLeft <= 0){
@@ -598,7 +769,6 @@
         }
       }
 
-      // movement
       let mx = 0, my = 0;
       if (STATE.keys.has("ArrowLeft") || STATE.keys.has("a") || STATE.keys.has("A")) mx -= 1;
       if (STATE.keys.has("ArrowRight") || STATE.keys.has("d") || STATE.keys.has("D")) mx += 1;
@@ -611,11 +781,9 @@
       STATE.player.x += mx * STATE.player.speed * dt;
       STATE.player.y += my * STATE.player.speed * dt;
 
-      // clamp
       STATE.player.x = clamp(STATE.player.x, 28, STATE.w - 28);
       STATE.player.y = clamp(STATE.player.y, 72, STATE.h - 28);
 
-      // pickups motion + bounce
       for (const p of STATE.pickups){
         p.x += p.vx * dt;
         p.y += p.vy * dt;
@@ -626,16 +794,15 @@
         if (p.y < 72){ p.y = 72; p.vy *= -1; }
         if (p.y > STATE.h - pad){ p.y = STATE.h - pad; p.vy *= -1; }
 
-        // enemies slightly drift toward player for pressure
         if (p.isEnemy){
           const dx = STATE.player.x - p.x;
           const dy = STATE.player.y - p.y;
           const d = Math.hypot(dx,dy) || 1;
           p.vx += (dx/d) * 40 * dt;
           p.vy += (dy/d) * 40 * dt;
-          // cap
+
           const sp = Math.hypot(p.vx,p.vy);
-          const cap = 220;
+          const cap = 230;
           if (sp > cap){
             p.vx = p.vx / sp * cap;
             p.vy = p.vy / sp * cap;
@@ -643,40 +810,35 @@
         }
       }
 
-      // collisions
       for (let i = STATE.pickups.length - 1; i >= 0; i--){
         const p = STATE.pickups[i];
         const rr = (STATE.player.r + p.r);
         if (dist2(STATE.player.x, STATE.player.y, p.x, p.y) <= rr*rr){
-          // forbidden type?
+
+          if (p.isEnemy){
+            showGameOver("You touched an enemy.");
+            return;
+          }
+
           if (lvl.forbidden && lvl.forbidden[p.type]){
             showGameOver("You touched a forbidden ice cream.");
             return;
           }
-          // enemy purple always kills (Level 3)
-          if (p.isEnemy){
-            showGameOver("You touched a purple enemy.");
-            return;
-          }
 
-          // collect
           STATE.pickups.splice(i, 1);
           if (p.type === "white") STATE.collected.white++;
           if (p.type === "purple") STATE.collected.purple++;
           if (p.type === "yellow") STATE.collected.yellow++;
-          if (p.type === "blue") STATE.collected.blue++;
 
-          // small pickup flash
           STATE.flashT = 0.08;
 
           if (checkWin()){
-            nextLevelOrFinish();
+            winAndPromptNext();
             return;
           }
         }
       }
 
-      // FX timers
       STATE.flashT = Math.max(0, STATE.flashT - dt);
     }
 
@@ -684,15 +846,9 @@
       const ctx = STATE.ctx;
       ctx.clearRect(0,0,STATE.w,STATE.h);
 
-      // draw pickups
-      for (const p of STATE.pickups){
-        drawIceCream(p);
-      }
-
-      // draw player
+      for (const p of STATE.pickups) drawIceCream(p);
       drawPlayer();
 
-      // flash overlay
       if (STATE.flashT > 0){
         ctx.save();
         ctx.globalAlpha = Math.min(0.25, STATE.flashT * 4);
@@ -707,14 +863,12 @@
       const img = STATE.imgs.player;
       const size = 78;
 
-      // subtle hover
       const t = performance.now() * 0.002;
       const bob = Math.sin(t) * 2;
 
       ctx.save();
       ctx.translate(STATE.player.x, STATE.player.y + bob);
 
-      // shadow
       ctx.globalAlpha = 0.35;
       ctx.fillStyle = "black";
       ctx.beginPath();
@@ -730,15 +884,13 @@
     function drawIceCream(p){
       const ctx = STATE.ctx;
 
-      let img;
+      let img = STATE.imgs.white;
       if (p.type === "white") img = STATE.imgs.white;
       if (p.type === "purple") img = STATE.imgs.purple;
       if (p.type === "yellow") img = STATE.imgs.yellow;
-      if (p.type === "blue") img = STATE.imgs.white; // tinted
 
       const size = p.isEnemy ? 62 : 54;
 
-      // enemy aura
       if (p.isEnemy){
         ctx.save();
         ctx.globalAlpha = 0.22;
@@ -752,23 +904,10 @@
       ctx.save();
       ctx.translate(p.x, p.y);
 
-      // small rotation for life
       const t = performance.now() * 0.001;
       ctx.rotate(Math.sin(t + (p.x+p.y)*0.01) * (p.isEnemy ? 0.18 : 0.10));
 
-      if (p.type === "blue"){
-        // tint white sprite to blue using multiply-style overlay
-        ctx.drawImage(img, -size/2, -size/2, size, size);
-        ctx.globalCompositeOperation = "source-atop";
-        ctx.globalAlpha = 0.55;
-        ctx.fillStyle = "#4db7ff";
-        ctx.fillRect(-size/2, -size/2, size, size);
-        ctx.globalCompositeOperation = "source-over";
-        ctx.globalAlpha = 1;
-      } else {
-        ctx.drawImage(img, -size/2, -size/2, size, size);
-      }
-
+      ctx.drawImage(img, -size/2, -size/2, size, size);
       ctx.restore();
     }
 
@@ -777,27 +916,19 @@
 
       ui.hudLevel.textContent = `${STATE.currentLevelIndex + 1} / ${LEVELS.length}`;
 
-      // time
-      if (lvl.timeLimit >= 9000){
-        ui.hudTime.textContent = "∞";
-      } else {
-        ui.hudTime.textContent = STATE.timeLeft.toFixed(1);
-      }
+      if (lvl.timeLimit >= 9000) ui.hudTime.textContent = "∞";
+      else ui.hudTime.textContent = STATE.timeLeft.toFixed(1);
 
-      // goal text
       const parts = [];
       if (lvl.goal.white) parts.push(`W:${lvl.goal.white}`);
       if (lvl.goal.purple) parts.push(`P:${lvl.goal.purple}`);
       if (lvl.goal.yellow) parts.push(`Y:${lvl.goal.yellow}`);
-      if (lvl.goal.blue) parts.push(`B:${lvl.goal.blue}`);
       ui.hudGoal.textContent = parts.join(" ");
 
-      // collected
       const cParts = [];
       if (lvl.goal.white) cParts.push(`W:${STATE.collected.white}`);
       if (lvl.goal.purple) cParts.push(`P:${STATE.collected.purple}`);
       if (lvl.goal.yellow) cParts.push(`Y:${STATE.collected.yellow}`);
-      if (lvl.goal.blue) cParts.push(`B:${STATE.collected.blue}`);
       ui.hudCollected.textContent = cParts.join(" ");
 
       const total = Math.max(1, levelGoalTotal(lvl));
@@ -823,7 +954,6 @@
 
     // ---------- Controls ----------
     window.addEventListener("keydown", (e) => {
-      // prevent page scroll with arrows
       if (["ArrowUp","ArrowDown","ArrowLeft","ArrowRight"," "].includes(e.key)) e.preventDefault();
       STATE.keys.add(e.key);
     }, { passive:false });
@@ -835,15 +965,28 @@
     // ---------- Buttons ----------
     ui.btnStart.addEventListener("click", async () => {
       await ensureAssets();
-      hide(ui.intro);
-      show(ui.canvas);
-      show(ui.hud);
-      resetForLevel(0);
-      showLevelOverlay();
+      showLevelsMenu();
+    });
+
+    ui.btnBackToIntro.addEventListener("click", () => {
+      showIntro();
+    });
+
+    // Click any level button
+    ui.levelSelect.addEventListener("click", (e) => {
+      const btn = e.target.closest("button[data-level]");
+      if (!btn) return;
+      const idx = Number(btn.getAttribute("data-level"));
+      if (!Number.isFinite(idx) || idx < 0 || idx >= LEVELS.length) return;
+
+      showGameScene();
+      resetForLevel(idx);
+      showLevelOverlay(idx);
+      STATE.running = false;
     });
 
     ui.btnBackMenuFromLevel.addEventListener("click", () => {
-      goMenu();
+      showLevelsMenu();
     });
 
     ui.btnLevelGo.addEventListener("click", () => {
@@ -854,12 +997,14 @@
 
     ui.btnRestart.addEventListener("click", () => {
       hide(ui.gameOverOverlay);
-      resetForLevel(STATE.currentLevelIndex);
-      showLevelOverlay();
+      const idx = STATE.currentLevelIndex;
+      resetForLevel(idx);
+      showLevelOverlay(idx);
+      STATE.running = false;
     });
 
-    ui.btnMenu.addEventListener("click", () => {
-      goMenu();
+    ui.btnLevels.addEventListener("click", () => {
+      showLevelsMenu();
     });
 
     // ---------- Assets init ----------
