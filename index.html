@@ -317,31 +317,22 @@
         <div style="display:flex; flex-direction:column; gap:12px;">
           <div style="display:flex; align-items:center; justify-content:space-between; gap:12px;">
             <div style="font-size:10px; color:rgba(255,255,255,0.82);">PROGRESS</div>
-            <div id="levelsProgressText" style="font-size:10px; color:rgba(255,255,255,0.82);">0 / 6</div>
+            <div id="levelsProgressText" style="font-size:10px; color:rgba(255,255,255,0.82);">0 / 9</div>
           </div>
           <div style="height:12px; border-radius:999px; background:rgba(255,255,255,0.10); border:1px solid rgba(255,255,255,0.14); overflow:hidden;">
             <div id="levelsProgressFill" style="height:100%; width:0%; background:linear-gradient(90deg, rgba(180,108,255,0.85), rgba(95,225,255,0.85));"></div>
           </div>
 
           <div class="level-grid" id="levelsGrid">
-            <button class="btn" data-level="0">
-              <span>./ LEVEL 1</span><span data-status class="lvl-badge todo">NOT DONE</span>
-            </button>
-            <button class="btn" data-level="1">
-              <span>./ LEVEL 2</span><span data-status class="lvl-badge todo">NOT DONE</span>
-            </button>
-            <button class="btn" data-level="2">
-              <span>./ LEVEL 3</span><span data-status class="lvl-badge todo">NOT DONE</span>
-            </button>
-            <button class="btn" data-level="3">
-              <span>./ LEVEL 4</span><span data-status class="lvl-badge todo">NOT DONE</span>
-            </button>
-            <button class="btn" data-level="4">
-              <span>./ LEVEL 5</span><span data-status class="lvl-badge todo">NOT DONE</span>
-            </button>
-            <button class="btn" data-level="5">
-              <span>./ LEVEL 6</span><span data-status class="lvl-badge todo">NOT DONE</span>
-            </button>
+            <button class="btn" data-level="0"><span>./ LEVEL 1</span><span data-status class="lvl-badge todo">NOT DONE</span></button>
+            <button class="btn" data-level="1"><span>./ LEVEL 2</span><span data-status class="lvl-badge todo">NOT DONE</span></button>
+            <button class="btn" data-level="2"><span>./ LEVEL 3</span><span data-status class="lvl-badge todo">NOT DONE</span></button>
+            <button class="btn" data-level="3"><span>./ LEVEL 4</span><span data-status class="lvl-badge todo">NOT DONE</span></button>
+            <button class="btn" data-level="4"><span>./ LEVEL 5</span><span data-status class="lvl-badge todo">NOT DONE</span></button>
+            <button class="btn" data-level="5"><span>./ LEVEL 6</span><span data-status class="lvl-badge todo">NOT DONE</span></button>
+            <button class="btn" data-level="6"><span>./ LEVEL 7</span><span data-status class="lvl-badge todo">NOT DONE</span></button>
+            <button class="btn" data-level="7"><span>./ LEVEL 8</span><span data-status class="lvl-badge todo">NOT DONE</span></button>
+            <button class="btn" data-level="8"><span>./ LEVEL 9</span><span data-status class="lvl-badge todo">NOT DONE</span></button>
           </div>
         </div>
 
@@ -358,7 +349,7 @@
     <div class="hud-block">
       <div class="hud-line">
         <span>LEVEL</span>
-        <span id="hudLevel">1 / 6</span>
+        <span id="hudLevel">1 / 9</span>
       </div>
       <div class="hud-line">
         <span>TIME</span>
@@ -426,6 +417,7 @@
       white: "icecream-1.png",
       purple: "icecream-2.png",
       yellow: "icecream-3.png",
+      blue: "icecream-4.png",
     };
 
     const ui = {
@@ -463,59 +455,98 @@
         name: "LEVEL 1",
         task: "Your mission: collect 10 white ice creams in 30 seconds.",
         timeLimit: 30,
-        goal: { white: 10, purple: 0, yellow: 0 },
-        forbidden: { purple: false, yellow: false, white: false },
-        enemies: { purple: 0 },
-        spawn: { white: 12, purple: 0, yellow: 0 },
+        goal: { white: 10, purple: 0, yellow: 0, blue: 0 },
+        surviveSeconds: 0,
+        forbidden: { purple: false, yellow: false, white: false, blue: false },
+        enemies: { white: 0, purple: 0, yellow: 0, blue: 0 },
+        spawn: { white: 12, purple: 0, yellow: 0, blue: 0 },
       },
       {
         name: "LEVEL 2",
         task: "Collect 10 purple ice creams in 20 seconds.",
         timeLimit: 20,
-        goal: { white: 0, purple: 10, yellow: 0 },
-        forbidden: { purple: false, yellow: false, white: false },
-        enemies: { purple: 0 },
-        spawn: { white: 0, purple: 12, yellow: 0 },
+        goal: { white: 0, purple: 10, yellow: 0, blue: 0 },
+        surviveSeconds: 0,
+        forbidden: { purple: false, yellow: false, white: false, blue: false },
+        enemies: { white: 0, purple: 0, yellow: 0, blue: 0 },
+        spawn: { white: 0, purple: 12, yellow: 0, blue: 0 },
       },
       {
         name: "LEVEL 3",
         task: "Collect 5 yellow ice creams — but if you touch purple ice cream, you lose.",
         timeLimit: 9999,
-        goal: { white: 0, purple: 0, yellow: 5 },
-        forbidden: { purple: true, yellow: false, white: false },
-        enemies: { purple: 2 },
-        spawn: { white: 0, purple: 3, yellow: 8 },
+        goal: { white: 0, purple: 0, yellow: 5, blue: 0 },
+        surviveSeconds: 0,
+        forbidden: { purple: true, yellow: false, white: false, blue: false },
+        enemies: { white: 0, purple: 2, yellow: 0, blue: 0 },
+        spawn: { white: 0, purple: 3, yellow: 8, blue: 0 },
       },
       {
         name: "LEVEL 4",
         task: "Collect 12 yellow ice creams.",
         timeLimit: 9999,
-        goal: { white: 0, purple: 0, yellow: 12 },
-        forbidden: { purple: false, yellow: false, white: false },
-        enemies: { purple: 0 },
-        spawn: { white: 0, purple: 0, yellow: 16 },
+        goal: { white: 0, purple: 0, yellow: 12, blue: 0 },
+        surviveSeconds: 0,
+        forbidden: { purple: false, yellow: false, white: false, blue: false },
+        enemies: { white: 0, purple: 0, yellow: 0, blue: 0 },
+        spawn: { white: 0, purple: 0, yellow: 16, blue: 0 },
       },
       {
         name: "LEVEL 5",
         task: "Collect 30 yellow ice creams",
         timeLimit: 9999,
-        goal: { white: 0, purple: 0, yellow: 30 },
-        forbidden: { purple: false, yellow: false, white: false },
-        enemies: { purple: 0 },
-        spawn: { white: 0, purple: 0, yellow: 34 },
+        goal: { white: 0, purple: 0, yellow: 30, blue: 0 },
+        surviveSeconds: 0,
+        forbidden: { purple: false, yellow: false, white: false, blue: false },
+        enemies: { white: 0, purple: 0, yellow: 0, blue: 0 },
+        spawn: { white: 0, purple: 0, yellow: 34, blue: 0 },
       },
       {
         name: "LEVEL 6",
         task: "Collect 20 white ice creams. Two enemies are chasing you.",
         timeLimit: 9999,
-        goal: { white: 20, purple: 0, yellow: 0 },
-        forbidden: { purple: false, yellow: false, white: false },
-        enemies: { purple: 2 },
-        spawn: { white: 24, purple: 0, yellow: 0 },
+        goal: { white: 20, purple: 0, yellow: 0, blue: 0 },
+        surviveSeconds: 0,
+        forbidden: { purple: false, yellow: false, white: false, blue: false },
+        enemies: { white: 0, purple: 2, yellow: 0, blue: 0 },
+        spawn: { white: 24, purple: 0, yellow: 0, blue: 0 },
+      },
+
+      {
+        name: "LEVEL 7",
+        task: "15 yellow ice creams are enemies. Collect 5 white ice creams to win.",
+        timeLimit: 9999,
+        goal: { white: 5, purple: 0, yellow: 0, blue: 0 },
+        surviveSeconds: 0,
+        forbidden: { purple: false, yellow: false, white: false, blue: false },
+        enemies: { white: 0, purple: 0, yellow: 15, blue: 0 },
+        spawn: { white: 8, purple: 0, yellow: 0, blue: 0 },
+      },
+
+      {
+        name: "LEVEL 8",
+        task: "20 white ice creams are enemies. Survive 20 seconds to win.",
+        timeLimit: 20,
+        goal: { white: 0, purple: 0, yellow: 0, blue: 0 },
+        surviveSeconds: 20,
+        forbidden: { purple: false, yellow: false, white: false, blue: false },
+        enemies: { white: 20, purple: 0, yellow: 0, blue: 0 },
+        spawn: { white: 0, purple: 0, yellow: 0, blue: 0 },
+      },
+
+      {
+        name: "LEVEL 9",
+        task: "Collect 2 purple ice creams. 25 blue ice creams are enemies.",
+        timeLimit: 9999,
+        goal: { white: 0, purple: 2, yellow: 0, blue: 0 },
+        surviveSeconds: 0,
+        forbidden: { purple: false, yellow: false, white: false, blue: false },
+        enemies: { white: 0, purple: 0, yellow: 0, blue: 25 },
+        spawn: { white: 0, purple: 4, yellow: 0, blue: 0 },
       },
     ];
 
-    const SAVE_KEY = "david_icecream_levels_done_v1";
+    const SAVE_KEY = "david_icecream_levels_done_v2";
 
     function loadDoneArray(){
       try{
@@ -569,6 +600,7 @@
 
       // timing
       timeLeft: 0,
+      timeSurvived: 0,
       lastT: 0,
 
       // canvas
@@ -582,7 +614,7 @@
       // entities
       player: { x: 0, y: 0, r: 26, vx: 0, vy: 0, speed: 420 },
       pickups: [],
-      collected: { white:0, purple:0, yellow:0 },
+      collected: { white:0, purple:0, yellow:0, blue:0 },
 
       // FX
       flashT: 0,
@@ -649,8 +681,9 @@
 
       const lvl = LEVELS[STATE.currentLevelIndex];
       const collectedLine =
-        `Collected: W ${STATE.collected.white} / P ${STATE.collected.purple} / Y ${STATE.collected.yellow}`;
-      ui.gameOverMeta.textContent = `${lvl.name} — ${collectedLine}`;
+        `Collected: W ${STATE.collected.white} / P ${STATE.collected.purple} / Y ${STATE.collected.yellow} / B ${STATE.collected.blue}`;
+      const surviveLine = lvl.surviveSeconds ? ` | Survived: ${STATE.timeSurvived.toFixed(1)}s / ${lvl.surviveSeconds}s` : "";
+      ui.gameOverMeta.textContent = `${lvl.name} — ${collectedLine}${surviveLine}`;
 
       show(ui.gameOverOverlay);
     }
@@ -659,7 +692,8 @@
     function resetForLevel(levelIndex){
       STATE.currentLevelIndex = levelIndex;
       STATE.pickups = [];
-      STATE.collected = { white:0, purple:0, yellow:0 };
+      STATE.collected = { white:0, purple:0, yellow:0, blue:0 };
+      STATE.timeSurvived = 0;
 
       STATE.player.x = STATE.w * 0.5;
       STATE.player.y = STATE.h * 0.62;
@@ -699,32 +733,48 @@
       if (spawn.white) for (let i=0;i<spawn.white;i++) spawnOne("white", false);
       if (spawn.purple) for (let i=0;i<spawn.purple;i++) spawnOne("purple", false);
       if (spawn.yellow) for (let i=0;i<spawn.yellow;i++) spawnOne("yellow", false);
+      if (spawn.blue) for (let i=0;i<spawn.blue;i++) spawnOne("blue", false);
 
-      const enemiesPurple = (lvl.enemies && lvl.enemies.purple) ? lvl.enemies.purple : 0;
-      for (let i=0;i<enemiesPurple;i++) spawnOne("purple", true);
+      const enemies = lvl.enemies || {};
+      if (enemies.white) for (let i=0;i<enemies.white;i++) spawnOne("white", true);
+      if (enemies.purple) for (let i=0;i<enemies.purple;i++) spawnOne("purple", true);
+      if (enemies.yellow) for (let i=0;i<enemies.yellow;i++) spawnOne("yellow", true);
+      if (enemies.blue) for (let i=0;i<enemies.blue;i++) spawnOne("blue", true);
     }
 
     function levelGoalTotal(lvl){
-      return (lvl.goal.white||0) + (lvl.goal.purple||0) + (lvl.goal.yellow||0);
+      const g = lvl.goal || {};
+      const base = (g.white||0) + (g.purple||0) + (g.yellow||0) + (g.blue||0);
+      if (lvl.surviveSeconds && lvl.surviveSeconds > 0) return Math.max(1, base + 1);
+      return Math.max(1, base);
     }
 
     function levelCollectedForGoal(lvl){
+      const g = lvl.goal || {};
       let sum = 0;
-      if (lvl.goal.white) sum += Math.min(STATE.collected.white, lvl.goal.white);
-      if (lvl.goal.purple) sum += Math.min(STATE.collected.purple, lvl.goal.purple);
-      if (lvl.goal.yellow) sum += Math.min(STATE.collected.yellow, lvl.goal.yellow);
+      if (g.white) sum += Math.min(STATE.collected.white, g.white);
+      if (g.purple) sum += Math.min(STATE.collected.purple, g.purple);
+      if (g.yellow) sum += Math.min(STATE.collected.yellow, g.yellow);
+      if (g.blue) sum += Math.min(STATE.collected.blue, g.blue);
+
+      if (lvl.surviveSeconds && lvl.surviveSeconds > 0){
+        const ok = (STATE.timeSurvived >= lvl.surviveSeconds) ? 1 : 0;
+        sum += ok;
+      }
       return sum;
     }
 
     function checkWin(){
       const lvl = LEVELS[STATE.currentLevelIndex];
-      const okWhite = (STATE.collected.white >= (lvl.goal.white||0));
-      const okPurple = (STATE.collected.purple >= (lvl.goal.purple||0));
-      const okYellow = (STATE.collected.yellow >= (lvl.goal.yellow||0));
-      return okWhite && okPurple && okYellow;
+      const g = lvl.goal || {};
+      const okWhite = (STATE.collected.white >= (g.white||0));
+      const okPurple = (STATE.collected.purple >= (g.purple||0));
+      const okYellow = (STATE.collected.yellow >= (g.yellow||0));
+      const okBlue = (STATE.collected.blue >= (g.blue||0));
+      const okSurvive = (!lvl.surviveSeconds || lvl.surviveSeconds <= 0) ? true : (STATE.timeSurvived >= lvl.surviveSeconds);
+      return okWhite && okPurple && okYellow && okBlue && okSurvive;
     }
 
-    // After win: mark as DONE and show next level overlay (no auto-start)
     function winAndPromptNext(){
       STATE.doneLevels[STATE.currentLevelIndex] = true;
       saveDoneArray(STATE.doneLevels);
@@ -760,10 +810,31 @@
     function update(dt){
       const lvl = LEVELS[STATE.currentLevelIndex];
 
+      // Survival timer
+      if (lvl.surviveSeconds && lvl.surviveSeconds > 0){
+        STATE.timeSurvived += dt;
+        if (STATE.timeSurvived >= lvl.surviveSeconds){
+          if (checkWin()){
+            winAndPromptNext();
+            return;
+          }
+        }
+      }
+
+      // Time limit logic (countdown)
       if (lvl.timeLimit < 9000){
         STATE.timeLeft -= dt;
         if (STATE.timeLeft <= 0){
           STATE.timeLeft = 0;
+          // If this is a survive level: reaching 0 means you survived full duration.
+          if (lvl.surviveSeconds && lvl.surviveSeconds > 0){
+            if (checkWin()){
+              winAndPromptNext();
+              return;
+            }
+            showGameOver("Time is up.");
+            return;
+          }
           showGameOver("Time is up.");
           return;
         }
@@ -826,9 +897,11 @@
           }
 
           STATE.pickups.splice(i, 1);
+
           if (p.type === "white") STATE.collected.white++;
           if (p.type === "purple") STATE.collected.purple++;
           if (p.type === "yellow") STATE.collected.yellow++;
+          if (p.type === "blue") STATE.collected.blue++;
 
           STATE.flashT = 0.08;
 
@@ -888,6 +961,7 @@
       if (p.type === "white") img = STATE.imgs.white;
       if (p.type === "purple") img = STATE.imgs.purple;
       if (p.type === "yellow") img = STATE.imgs.yellow;
+      if (p.type === "blue") img = STATE.imgs.blue;
 
       const size = p.isEnemy ? 62 : 54;
 
@@ -913,25 +987,31 @@
 
     function updateHUD(){
       const lvl = LEVELS[STATE.currentLevelIndex];
-
       ui.hudLevel.textContent = `${STATE.currentLevelIndex + 1} / ${LEVELS.length}`;
 
       if (lvl.timeLimit >= 9000) ui.hudTime.textContent = "∞";
       else ui.hudTime.textContent = STATE.timeLeft.toFixed(1);
 
+      // GOAL text
+      const g = lvl.goal || {};
       const parts = [];
-      if (lvl.goal.white) parts.push(`W:${lvl.goal.white}`);
-      if (lvl.goal.purple) parts.push(`P:${lvl.goal.purple}`);
-      if (lvl.goal.yellow) parts.push(`Y:${lvl.goal.yellow}`);
-      ui.hudGoal.textContent = parts.join(" ");
+      if (g.white) parts.push(`W:${g.white}`);
+      if (g.purple) parts.push(`P:${g.purple}`);
+      if (g.yellow) parts.push(`Y:${g.yellow}`);
+      if (g.blue) parts.push(`B:${g.blue}`);
+      if (lvl.surviveSeconds && lvl.surviveSeconds > 0) parts.push(`SURVIVE:${lvl.surviveSeconds}s`);
+      ui.hudGoal.textContent = parts.length ? parts.join(" ") : "—";
 
+      // COLLECTED text
       const cParts = [];
-      if (lvl.goal.white) cParts.push(`W:${STATE.collected.white}`);
-      if (lvl.goal.purple) cParts.push(`P:${STATE.collected.purple}`);
-      if (lvl.goal.yellow) cParts.push(`Y:${STATE.collected.yellow}`);
-      ui.hudCollected.textContent = cParts.join(" ");
+      if (g.white) cParts.push(`W:${STATE.collected.white}`);
+      if (g.purple) cParts.push(`P:${STATE.collected.purple}`);
+      if (g.yellow) cParts.push(`Y:${STATE.collected.yellow}`);
+      if (g.blue) cParts.push(`B:${STATE.collected.blue}`);
+      if (lvl.surviveSeconds && lvl.surviveSeconds > 0) cParts.push(`S:${Math.min(lvl.surviveSeconds, STATE.timeSurvived).toFixed(1)}s`);
+      ui.hudCollected.textContent = cParts.length ? cParts.join(" ") : "—";
 
-      const total = Math.max(1, levelGoalTotal(lvl));
+      const total = levelGoalTotal(lvl);
       const got = levelCollectedForGoal(lvl);
       const pct = Math.round((got / total) * 100);
       ui.hudProgressText.textContent = pct + "%";
@@ -972,7 +1052,6 @@
       showIntro();
     });
 
-    // Click any level button
     ui.levelSelect.addEventListener("click", (e) => {
       const btn = e.target.closest("button[data-level]");
       if (!btn) return;
@@ -1010,13 +1089,14 @@
     // ---------- Assets init ----------
     async function ensureAssets(){
       if (STATE.assetsReady) return;
-      const [player, white, purple, yellow] = await Promise.all([
+      const [player, white, purple, yellow, blue] = await Promise.all([
         loadImage(ASSETS.player),
         loadImage(ASSETS.white),
         loadImage(ASSETS.purple),
         loadImage(ASSETS.yellow),
+        loadImage(ASSETS.blue),
       ]);
-      STATE.imgs = { player, white, purple, yellow };
+      STATE.imgs = { player, white, purple, yellow, blue };
       STATE.assetsReady = true;
     }
 
