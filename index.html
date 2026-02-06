@@ -3,16 +3,14 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <title>David & Ice Cream — Quest</title>
+  <title>David & Ice Cream</title>
 
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap" rel="stylesheet">
 
   <style>
-    :root{
-      --ui-text: rgba(255,255,255,0.92);
-    }
+    :root{ --ui-text: rgba(255,255,255,0.92); }
     *{ box-sizing:border-box; margin:0; padding:0; }
     html, body { height:100%; }
     body{
@@ -88,7 +86,7 @@
       backdrop-filter: blur(8px);
       z-index:10;
     }
-    .hud-block{ display:flex; flex-direction:column; gap:6px; min-width: 210px; }
+    .hud-block{ display:flex; flex-direction:column; gap:6px; min-width: 230px; }
     .hud-line{
       display:flex; align-items:center; justify-content:space-between; gap:12px;
       font-size:10px; color: rgba(255,255,255,0.82); white-space:nowrap;
@@ -109,7 +107,7 @@
 
     .panel{
       position:relative;
-      width:min(820px, 94vw);
+      width:min(860px, 94vw);
       background: linear-gradient(180deg, rgba(22,26,38,0.92), rgba(10,12,18,0.86));
       border:1px solid rgba(255,255,255,0.16);
       border-radius:18px;
@@ -128,6 +126,7 @@
     @media (max-width: 520px){ .level-grid{ grid-template-columns: 1fr; } }
 
     #levelsGrid .btn{ display:flex; align-items:center; justify-content:space-between; gap:12px; }
+
     .lvl-badge{
       font-size:9px; padding:6px 10px; border-radius:999px;
       border:1px solid rgba(255,255,255,0.18);
@@ -145,6 +144,17 @@
       border-color: rgba(255,255,255,0.16);
       color: rgba(255,255,255,0.76);
     }
+
+    .btn-survive{ background: linear-gradient(135deg, rgba(255,77,109,0.24), rgba(95,225,255,0.16)); }
+
+    .grid-sep{
+      grid-column: 1 / -1; 
+      height: 2px;
+      border-radius: 999px;
+      background: linear-gradient(90deg, rgba(255,255,255,0.10), rgba(255,255,255,0.22), rgba(255,255,255,0.10));
+      opacity: 0.9;
+      margin: 2px 0;
+    }
   </style>
 </head>
 
@@ -155,9 +165,7 @@
         <div class="intro-hero">
           <img src="1.png" alt="Intro image" />
           <div class="intro-text">
-            You probably remember that back in December David got upset because he couldn’t taste ice cream.
-            Now this is a game — a whole campaign dedicated to David and ice cream.
-            A long journey awaits...
+            David & Ice Cream — campaign.
           </div>
         </div>
         <div class="button-row">
@@ -171,35 +179,23 @@
     <div class="card">
       <div class="card-inner">
         <div class="intro-hero" style="padding-bottom:0;">
-          <div style="font-size:13px; line-height:1.5;">SELECT LEVEL</div>
+          <div style="font-size:13px; line-height:1.5;">SELECT</div>
           <div class="intro-text" style="padding-bottom:0;">
-            Choose a level. Each level starts only after you press its button.
+            Survive is separate from the campaign levels.
           </div>
         </div>
 
         <div style="display:flex; flex-direction:column; gap:12px;">
           <div style="display:flex; align-items:center; justify-content:space-between; gap:12px;">
             <div style="font-size:10px; color:rgba(255,255,255,0.82);">PROGRESS</div>
-            <div id="levelsProgressText" style="font-size:10px; color:rgba(255,255,255,0.82);">0 / 12</div>
+            <div id="levelsProgressText" style="font-size:10px; color:rgba(255,255,255,0.82);">0 / 15</div>
           </div>
           <div style="height:12px; border-radius:999px; background:rgba(255,255,255,0.10); border:1px solid rgba(255,255,255,0.14); overflow:hidden;">
             <div id="levelsProgressFill" style="height:100%; width:0%; background:linear-gradient(90deg, rgba(180,108,255,0.85), rgba(95,225,255,0.85));"></div>
           </div>
 
-          <div class="level-grid" id="levelsGrid">
-            <button class="btn" data-level="0"><span>./ LEVEL 1</span><span data-status class="lvl-badge todo">NOT DONE</span></button>
-            <button class="btn" data-level="1"><span>./ LEVEL 2</span><span data-status class="lvl-badge todo">NOT DONE</span></button>
-            <button class="btn" data-level="2"><span>./ LEVEL 3</span><span data-status class="lvl-badge todo">NOT DONE</span></button>
-            <button class="btn" data-level="3"><span>./ LEVEL 4</span><span data-status class="lvl-badge todo">NOT DONE</span></button>
-            <button class="btn" data-level="4"><span>./ LEVEL 5</span><span data-status class="lvl-badge todo">NOT DONE</span></button>
-            <button class="btn" data-level="5"><span>./ LEVEL 6</span><span data-status class="lvl-badge todo">NOT DONE</span></button>
-            <button class="btn" data-level="6"><span>./ LEVEL 7</span><span data-status class="lvl-badge todo">NOT DONE</span></button>
-            <button class="btn" data-level="7"><span>./ LEVEL 8</span><span data-status class="lvl-badge todo">NOT DONE</span></button>
-            <button class="btn" data-level="8"><span>./ LEVEL 9</span><span data-status class="lvl-badge todo">NOT DONE</span></button>
-            <button class="btn" data-level="9"><span>./ LEVEL 10</span><span data-status class="lvl-badge todo">NOT DONE</span></button>
-            <button class="btn" data-level="10"><span>./ LEVEL 11</span><span data-status class="lvl-badge todo">NOT DONE</span></button>
-            <button class="btn" data-level="11"><span>./ LEVEL 12</span><span data-status class="lvl-badge todo">NOT DONE</span></button>
-          </div>
+  
+          <div class="level-grid" id="levelsGrid"></div>
         </div>
 
         <div class="button-row">
@@ -213,8 +209,8 @@
 
   <div id="hud" class="hidden">
     <div class="hud-block">
-      <div class="hud-line"><span>LEVEL</span><span id="hudLevel">1 / 12</span></div>
-      <div class="hud-line"><span>TIME</span><span id="hudTime">00.0</span></div>
+      <div class="hud-line"><span>MODE</span><span id="hudMode">CAMPAIGN</span></div>
+      <div class="hud-line"><span>LEVEL</span><span id="hudLevel">1 / 15</span></div>
     </div>
 
     <div class="progress-wrap">
@@ -223,6 +219,7 @@
     </div>
 
     <div class="hud-block">
+      <div class="hud-line"><span>TIME / SCORE</span><span id="hudTime">00.0</span></div>
       <div class="hud-line"><span>GOAL</span><span id="hudGoal">—</span></div>
       <div class="hud-line"><span>COLLECTED</span><span id="hudCollected">0</span></div>
     </div>
@@ -233,7 +230,7 @@
       <h2 id="levelTitle">LEVEL 1</h2>
       <p id="levelTask">Task text…</p>
       <div class="panel-actions">
-        <button id="btnLevelGo" class="btn">./ LEVEL 1</button>
+        <button id="btnLevelGo" class="btn">./ GO</button>
         <button id="btnBackMenuFromLevel" class="btn btn-ghost">./ LEVELS</button>
       </div>
     </div>
@@ -247,6 +244,7 @@
       <div class="panel-actions">
         <button id="btnRestart" class="btn btn-danger">./ RESTART</button>
         <button id="btnLevels" class="btn btn-ghost">./ LEVELS</button>
+        <button id="btnMenu" class="btn btn-ghost">./ MENU</button>
       </div>
     </div>
   </div>
@@ -275,6 +273,7 @@
       canvas: document.getElementById("game"),
       hud: document.getElementById("hud"),
 
+      hudMode: document.getElementById("hudMode"),
       hudLevel: document.getElementById("hudLevel"),
       hudTime: document.getElementById("hudTime"),
       hudGoal: document.getElementById("hudGoal"),
@@ -297,10 +296,13 @@
       btnBackToIntro: document.getElementById("btnBackToIntro"),
       btnRestart: document.getElementById("btnRestart"),
       btnLevels: document.getElementById("btnLevels"),
+      btnMenu: document.getElementById("btnMenu"),
     };
 
+    const GAME_MODES = { CAMPAIGN: "campaign", SURVIVE: "survive" };
+
     const LEVELS = [
-      { name:"LEVEL 1", task:"Your mission: collect 10 white ice creams in 30 seconds.", timeLimit:30,
+      { name:"LEVEL 1", task:"Collect 10 white ice creams in 30 seconds.", timeLimit:30,
         goal:{white:10,purple:0,yellow:0,blue:0}, surviveSeconds:0,
         forbidden:{purple:false,yellow:false,white:false,blue:false},
         enemies:{white:0,purple:0,yellow:0,blue:0}, spawn:{white:12,purple:0,yellow:0,blue:0},
@@ -345,31 +347,111 @@
         forbidden:{purple:false,yellow:false,white:false,blue:false},
         enemies:{white:0,purple:0,yellow:0,blue:25}, spawn:{white:0,purple:4,yellow:0,blue:0},
       },
-
       { name:"LEVEL 10", task:"30 blue enemies. Collect 5 white ice creams.", timeLimit:9999,
         goal:{white:5,purple:0,yellow:0,blue:0}, surviveSeconds:0,
         forbidden:{purple:false,yellow:false,white:false,blue:false},
         enemies:{white:0,purple:0,yellow:0,blue:30}, spawn:{white:5,purple:0,yellow:0,blue:0},
       },
-
       { name:"LEVEL 11", task:"Survive 20 seconds. 20 yellow enemies chase you like a magnet — touch = lose. You are slightly faster.",
         timeLimit:20, goal:{white:0,purple:0,yellow:0,blue:0}, surviveSeconds:20,
         forbidden:{purple:false,yellow:false,white:false,blue:false},
         enemies:{white:0,purple:0,yellow:20,blue:0}, spawn:{white:0,purple:0,yellow:0,blue:0},
-        enemyBehavior:{ mode:"magnet", magnetStrength:260, speedCap:360 },   
-        playerSpeedOverride: 420,                                          
+        enemyBehavior:{ mode:"magnet", magnetStrength:260, speedCap:360 },
+        playerSpeedOverride: 420,
       },
-
       { name:"LEVEL 12", task:"Purple ice creams appear one by one. Collect 6 purple ice creams. Avoid 20 blue enemies.",
         timeLimit:9999, goal:{white:0,purple:6,yellow:0,blue:0}, surviveSeconds:0,
         forbidden:{purple:false,yellow:false,white:false,blue:false},
-        enemies:{white:0,purple:0,yellow:0,blue:20},         
+        enemies:{white:0,purple:0,yellow:0,blue:20},
         spawn:{white:0,purple:0,yellow:0,blue:0},
         sequential:{ type:"purple", total:6 },
       },
+      { name:"LEVEL 13", task:"3 white enemies are attracted to YOU like a magnet. Collect ALL 10 purple ice creams (they are NOT attracted).",
+        timeLimit:9999,
+        goal:{white:0,purple:10,yellow:0,blue:0}, surviveSeconds:0,
+        forbidden:{white:false,purple:false,yellow:false,blue:false},
+        enemies:{white:3,purple:0,yellow:0,blue:0},
+        spawn:{white:0,purple:10,yellow:0,blue:0},
+        magnetToPlayer:{ enabled:true, affectsEnemiesOnly:true, types:["white"], strength:520, speedCap:520 },
+      },
+      { name:"LEVEL 14", task:"Collect 5 yellow ice creams. Each one has a shield: ON 3.0s (can't touch), OFF 1.5s (can collect).",
+        timeLimit:9999,
+        goal:{white:0,purple:0,yellow:5,blue:0}, surviveSeconds:0,
+        forbidden:{white:false,purple:false,yellow:false,blue:false},
+        enemies:{white:0,purple:0,yellow:0,blue:0},
+        spawn:{white:0,purple:0,yellow:5,blue:0},
+        shields:{ enabled:true, types:["yellow"], on:3.0, off:1.5, phaseOffsetRandom:true },
+      },
+      { name:"LEVEL 15", task:"Pulse Magnet: collect 10 purple ice creams. 6 blue enemies hunt you. Every 2s magnet turns ON for 1s and pulls EVERYTHING to you.",
+        timeLimit:60,
+        goal:{white:0,purple:10,yellow:0,blue:0}, surviveSeconds:0,
+        forbidden:{white:false,purple:false,yellow:false,blue:false},
+        enemies:{white:0,purple:0,yellow:0,blue:6},
+        spawn:{white:0,purple:12,yellow:0,blue:0},
+        pulseMagnet:{ enabled:true, period:2.0, onDuration:1.0, strength:480, speedCap:620, affectsPickups:true, affectsEnemies:true },
+        playerSpeedOverride: 440,
+      },
     ];
 
-    const SAVE_KEY = "david_icecream_levels_done_v5";
+    const SURVIVE = {
+      name: "SURVIVE",
+      task: "No time limit. Score points by collecting ice creams until you die.",
+      playerSpeed: 440,
+      keepOnField: { white: 3, purple: 3 },
+      enemies: { magnetBlue: 3, chaoticYellowMax: 4 },
+      respawnDelayCollectible: 0.6,
+      chaoticSpawnEvery: 6.0,
+      chaoticSpawnJitter: 1.5,
+      magnetStrength: 520,
+      magnetSpeedCap: 560,
+    };
+
+    const SAVE_KEY = "david_icecream_levels_done_v9";
+    const SAVE_SURVIVE_BEST = "david_icecream_survive_best_v1";
+
+    const STATE = {
+      assetsReady: false,
+      imgs: {},
+
+      running: false,
+      mode: GAME_MODES.CAMPAIGN,
+      currentLevelIndex: 0,
+
+      timeLeft: 0,
+      timeSurvived: 0,
+      lastT: 0,
+
+      ctx: null,
+      w: 0,
+      h: 0,
+
+      keys: new Set(),
+
+      basePlayer: { x: 0, y: 0, r: 26, speed: 420 },
+      player: { x: 0, y: 0, r: 26, speed: 420 },
+
+      pickups: [],
+      collected: { white:0, purple:0, yellow:0, blue:0 },
+
+      seqRemaining: 0,
+      flashT: 0,
+      levelTime: 0,
+
+      doneLevels: null,
+
+      score: 0,
+      bestScore: 0,
+      respawnQueue: [],
+      surviveChaoticTimer: 0,
+      surviveNextChaoticAt: 0,
+    };
+
+    function clamp(v, a, b){ return Math.max(a, Math.min(b, v)); }
+    function rand(a,b){ return a + Math.random()*(b-a); }
+    function dist2(ax,ay,bx,by){ const dx=ax-bx, dy=ay-by; return dx*dx+dy*dy; }
+
+    function show(el){ el.classList.remove("hidden"); }
+    function hide(el){ el.classList.add("hidden"); }
 
     function loadDoneArray(){
       try{
@@ -385,6 +467,40 @@
       }
     }
     function saveDoneArray(done){ localStorage.setItem(SAVE_KEY, JSON.stringify(done)); }
+
+    function loadBestScore(){
+      try{
+        const raw = localStorage.getItem(SAVE_SURVIVE_BEST);
+        const n = Number(raw ?? 0);
+        return Number.isFinite(n) ? n : 0;
+      }catch(e){ return 0; }
+    }
+    function saveBestScore(n){
+      localStorage.setItem(SAVE_SURVIVE_BEST, String(Math.max(0, Math.floor(n))));
+    }
+
+    function buildLevelsGrid(){
+      const grid = document.getElementById("levelsGrid");
+      grid.innerHTML = "";
+
+      const surviveBtn = document.createElement("button");
+      surviveBtn.className = "btn btn-danger";
+      surviveBtn.setAttribute("data-mode", "survive");
+      surviveBtn.innerHTML = `<span>./ SURVIVE</span><span class="lvl-badge todo">ENDLESS</span>`;
+      grid.appendChild(surviveBtn);
+
+      const sep = document.createElement("div");
+      sep.className = "grid-sep";
+      grid.appendChild(sep);
+
+      for (let i=0;i<LEVELS.length;i++){
+        const btn = document.createElement("button");
+        btn.className = "btn";
+        btn.setAttribute("data-level", String(i));
+        btn.innerHTML = `<span>./ ${LEVELS[i].name}</span><span data-status class="lvl-badge todo">NOT DONE</span>`;
+        grid.appendChild(btn);
+      }
+    }
 
     function renderLevelsProgressUI(){
       const grid = document.getElementById("levelsGrid");
@@ -410,42 +526,6 @@
       });
     }
 
-    const STATE = {
-      assetsReady: false,
-      imgs: {},
-
-      running: false,
-      currentLevelIndex: 0,
-
-      timeLeft: 0,
-      timeSurvived: 0,
-      lastT: 0,
-
-      ctx: null,
-      w: 0,
-      h: 0,
-
-      keys: new Set(),
-
-      basePlayer: { x: 0, y: 0, r: 26, speed: 420 },
-      player: { x: 0, y: 0, r: 26, speed: 420 },
-
-      pickups: [],
-      collected: { white:0, purple:0, yellow:0, blue:0 },
-
-      seqRemaining: 0,
-      flashT: 0,
-
-      doneLevels: loadDoneArray(),
-    };
-
-    function clamp(v, a, b){ return Math.max(a, Math.min(b, v)); }
-    function rand(a,b){ return a + Math.random()*(b-a); }
-    function dist2(ax,ay,bx,by){ const dx=ax-bx, dy=ay-by; return dx*dx+dy*dy; }
-
-    function show(el){ el.classList.remove("hidden"); }
-    function hide(el){ el.classList.add("hidden"); }
-
     function showIntro(){
       STATE.running = false;
       hide(ui.canvas); hide(ui.hud); hide(ui.levelOverlay); hide(ui.gameOverOverlay); hide(ui.levelSelect);
@@ -461,11 +541,10 @@
       show(ui.levelSelect);
       renderLevelsProgressUI();
     }
-    function showLevelOverlay(levelIndex){
-      const lvl = LEVELS[levelIndex];
-      ui.levelTitle.textContent = lvl.name;
-      ui.levelTask.textContent = lvl.task;
-      ui.btnLevelGo.textContent = "./ " + lvl.name;
+    function showLevelOverlay(title, task, goLabel){
+      ui.levelTitle.textContent = title;
+      ui.levelTask.textContent = task;
+      ui.btnLevelGo.textContent = goLabel;
       show(ui.levelOverlay);
     }
     function hideLevelOverlay(){ hide(ui.levelOverlay); }
@@ -475,28 +554,64 @@
       ui.gameOverTitle.textContent = "GAME OVER";
       ui.gameOverReason.textContent = reason;
 
-      const lvl = LEVELS[STATE.currentLevelIndex];
-      const collectedLine = `Collected: W ${STATE.collected.white} / P ${STATE.collected.purple} / Y ${STATE.collected.yellow} / B ${STATE.collected.blue}`;
-      const surviveLine = lvl.surviveSeconds ? ` | Survived: ${STATE.timeSurvived.toFixed(1)}s / ${lvl.surviveSeconds}s` : "";
-      ui.gameOverMeta.textContent = `${lvl.name} — ${collectedLine}${surviveLine}`;
+      if (STATE.mode === GAME_MODES.SURVIVE){
+        STATE.bestScore = Math.max(STATE.bestScore, STATE.score);
+        saveBestScore(STATE.bestScore);
+        ui.gameOverMeta.textContent = `SURVIVE — Score: ${STATE.score} | Best: ${STATE.bestScore}`;
+      } else {
+        const lvl = LEVELS[STATE.currentLevelIndex];
+        const collectedLine = `Collected: W ${STATE.collected.white} / P ${STATE.collected.purple} / Y ${STATE.collected.yellow} / B ${STATE.collected.blue}`;
+        const surviveLine = lvl.surviveSeconds ? ` | Survived: ${STATE.timeSurvived.toFixed(1)}s / ${lvl.surviveSeconds}s` : "";
+        ui.gameOverMeta.textContent = `${lvl.name} — ${collectedLine}${surviveLine}`;
+      }
 
       show(ui.gameOverOverlay);
     }
 
-    function spawnOne(type, isEnemy=false){
-      const r = 20;
-      let x = rand(40, STATE.w - 40);
-      let y = rand(90, STATE.h - 60);
+    function makeEntity({ type, isEnemy, x, y, r, vx, vy }){
+      return {
+        type, isEnemy: !!isEnemy,
+        x, y, r, vx, vy,
+        shieldEnabled:false, shieldOn:false,
+        shieldOnT:3.0, shieldOffT:1.5, shieldPhase:0,
+      };
+    }
+
+    function spawnOne(type, isEnemy=false, opts={}){
+      const r = opts.r ?? 20;
+      let x = opts.x ?? rand(40, STATE.w - 40);
+      let y = opts.y ?? rand(90, STATE.h - 60);
 
       if (dist2(x,y,STATE.player.x,STATE.player.y) < 180*180){
         x = rand(40, STATE.w - 40);
         y = rand(90, STATE.h - 60);
       }
 
-      const baseV = isEnemy ? rand(130, 190) : rand(40, 85);
+      const baseV = (opts.baseV != null) ? opts.baseV : (isEnemy ? rand(130, 190) : rand(40, 85));
       const a = rand(0, Math.PI*2);
 
-      STATE.pickups.push({ type, x, y, r, vx: Math.cos(a)*baseV, vy: Math.sin(a)*baseV, isEnemy });
+      const p = makeEntity({
+        type, isEnemy,
+        x, y, r,
+        vx: (opts.vx != null ? opts.vx : Math.cos(a)*baseV),
+        vy: (opts.vy != null ? opts.vy : Math.sin(a)*baseV),
+      });
+
+      STATE.pickups.push(p);
+      return p;
+    }
+
+    function applyShieldsForLevel(lvl){
+      if (!lvl.shields || !lvl.shields.enabled) return;
+      const types = new Set(lvl.shields.types || []);
+      for (const p of STATE.pickups){
+        if (p.isEnemy) continue;
+        if (!types.has(p.type)) continue;
+        p.shieldEnabled = true;
+        p.shieldOnT = Number(lvl.shields.on ?? 3.0);
+        p.shieldOffT = Number(lvl.shields.off ?? 1.5);
+        p.shieldPhase = (lvl.shields.phaseOffsetRandom ? rand(0, p.shieldOnT + p.shieldOffT) : 0);
+      }
     }
 
     function spawnPickupsForLevel(lvl){
@@ -518,16 +633,21 @@
           spawnOne(lvl.sequential.type, false);
         }
       }
+
+      applyShieldsForLevel(lvl);
     }
 
-    function resetForLevel(levelIndex){
+    function resetCampaignLevel(levelIndex){
+      STATE.mode = GAME_MODES.CAMPAIGN;
+
       STATE.currentLevelIndex = levelIndex;
       STATE.pickups = [];
       STATE.collected = { white:0, purple:0, yellow:0, blue:0 };
       STATE.timeSurvived = 0;
       STATE.seqRemaining = 0;
+      STATE.flashT = 0;
+      STATE.levelTime = 0;
 
-      // set player speed per level (LEVEL 11 override)
       const lvl = LEVELS[levelIndex];
       STATE.player.speed = Number(lvl.playerSpeedOverride || STATE.basePlayer.speed);
 
@@ -539,13 +659,40 @@
       updateHUD();
     }
 
+    function resetSurvive(){
+      STATE.mode = GAME_MODES.SURVIVE;
+
+      STATE.pickups = [];
+      STATE.collected = { white:0, purple:0, yellow:0, blue:0 };
+      STATE.flashT = 0;
+      STATE.levelTime = 0;
+
+      STATE.score = 0;
+      STATE.bestScore = loadBestScore();
+
+      STATE.respawnQueue = [];
+      STATE.surviveChaoticTimer = 0;
+      STATE.surviveNextChaoticAt = SURVIVE.chaoticSpawnEvery + rand(0, SURVIVE.chaoticSpawnJitter);
+
+      STATE.player.speed = SURVIVE.playerSpeed;
+      STATE.player.x = STATE.w * 0.5;
+      STATE.player.y = STATE.h * 0.62;
+
+      for (let i=0;i<SURVIVE.keepOnField.white;i++) spawnOne("white", false);
+      for (let i=0;i<SURVIVE.keepOnField.purple;i++) spawnOne("purple", false);
+
+      for (let i=0;i<SURVIVE.enemies.magnetBlue;i++) spawnOne("blue", true, { baseV: rand(110,150) });
+      for (let i=0;i<2;i++) spawnOne("yellow", true, { baseV: rand(190,260) });
+
+      updateHUD();
+    }
+
     function levelGoalTotal(lvl){
       const g = lvl.goal || {};
       const base = (g.white||0) + (g.purple||0) + (g.yellow||0) + (g.blue||0);
       if (lvl.surviveSeconds && lvl.surviveSeconds > 0) return Math.max(1, base + 1);
       return Math.max(1, base);
     }
-
     function levelCollectedForGoal(lvl){
       const g = lvl.goal || {};
       let sum = 0;
@@ -553,14 +700,12 @@
       if (g.purple) sum += Math.min(STATE.collected.purple, g.purple);
       if (g.yellow) sum += Math.min(STATE.collected.yellow, g.yellow);
       if (g.blue) sum += Math.min(STATE.collected.blue, g.blue);
-
       if (lvl.surviveSeconds && lvl.surviveSeconds > 0){
         sum += (STATE.timeSurvived >= lvl.surviveSeconds) ? 1 : 0;
       }
       return sum;
     }
-
-    function checkWin(){
+    function checkWinCampaign(){
       const lvl = LEVELS[STATE.currentLevelIndex];
       const g = lvl.goal || {};
       const okWhite = (STATE.collected.white >= (g.white||0));
@@ -570,37 +715,27 @@
       const okSurvive = (!lvl.surviveSeconds || lvl.surviveSeconds <= 0) ? true : (STATE.timeSurvived >= lvl.surviveSeconds);
       return okWhite && okPurple && okYellow && okBlue && okSurvive;
     }
-
     function winAndPromptNext(){
       STATE.doneLevels[STATE.currentLevelIndex] = true;
       saveDoneArray(STATE.doneLevels);
 
       if (STATE.currentLevelIndex + 1 < LEVELS.length){
         const nextIndex = STATE.currentLevelIndex + 1;
-        resetForLevel(nextIndex);
-        showLevelOverlay(nextIndex);
+        resetCampaignLevel(nextIndex);
+        showLevelOverlay(LEVELS[nextIndex].name, LEVELS[nextIndex].task, "./ " + LEVELS[nextIndex].name);
         STATE.running = false;
       } else {
         STATE.running = false;
         ui.gameOverTitle.textContent = "YOU WIN";
-        ui.gameOverReason.textContent = "Campaign complete. David finally gets the ice cream.";
+        ui.gameOverReason.textContent = "Campaign complete.";
         ui.gameOverMeta.textContent = `Finished: ${LEVELS.length} levels.`;
         show(ui.gameOverOverlay);
       }
     }
 
-    function applyEnemyChase(dt, lvl, p){
-      let strength = 40;
-      let cap = 230;
-
-      const eb = lvl.enemyBehavior || null;
-      if (eb && eb.mode === "magnet"){
-        strength = Number(eb.magnetStrength ?? 260);
-        cap = Number(eb.speedCap ?? 360);
-      }
-
-      const dx = STATE.player.x - p.x;
-      const dy = STATE.player.y - p.y;
+    function applySeek(dt, p, targetX, targetY, strength, cap){
+      const dx = targetX - p.x;
+      const dy = targetY - p.y;
       const d = Math.hypot(dx,dy) || 1;
 
       p.vx += (dx/d) * strength * dt;
@@ -610,6 +745,112 @@
       if (sp > cap){
         p.vx = p.vx / sp * cap;
         p.vy = p.vy / sp * cap;
+      }
+    }
+
+    function applyEnemyChaseCampaign(dt, lvl, p){
+      let strength = 40;
+      let cap = 230;
+      const eb = lvl.enemyBehavior || null;
+      if (eb && eb.mode === "magnet"){
+        strength = Number(eb.magnetStrength ?? 260);
+        cap = Number(eb.speedCap ?? 360);
+      }
+      applySeek(dt, p, STATE.player.x, STATE.player.y, strength, cap);
+    }
+
+    function updateShieldState(dt, lvl){
+      if (!lvl.shields || !lvl.shields.enabled) return;
+      for (const p of STATE.pickups){
+        if (!p.shieldEnabled) continue;
+        const cycle = p.shieldOnT + p.shieldOffT;
+        p.shieldPhase = (p.shieldPhase + dt) % Math.max(0.001, cycle);
+        p.shieldOn = (p.shieldPhase < p.shieldOnT);
+      }
+    }
+
+    function isPulseMagnetOn(lvl){
+      const pm = lvl.pulseMagnet;
+      if (!pm || !pm.enabled) return false;
+      const period = Math.max(0.05, Number(pm.period ?? 2.0));
+      const onD = clamp(Number(pm.onDuration ?? 1.0), 0.05, period);
+      const phase = (STATE.levelTime % period);
+      return phase < onD;
+    }
+
+    function applyCampaignMagnets(dt, lvl){
+      if (lvl.magnetToPlayer && lvl.magnetToPlayer.enabled){
+        const types = new Set(lvl.magnetToPlayer.types || []);
+        const strength = Number(lvl.magnetToPlayer.strength ?? 380);
+        const cap = Number(lvl.magnetToPlayer.speedCap ?? 520);
+        for (const p of STATE.pickups){
+          if (!p.isEnemy) continue;
+          if (!types.has(p.type)) continue;
+          applySeek(dt, p, STATE.player.x, STATE.player.y, strength, cap);
+        }
+      }
+
+      if (lvl.pulseMagnet && lvl.pulseMagnet.enabled){
+        if (!isPulseMagnetOn(lvl)) return;
+        const strength = Number(lvl.pulseMagnet.strength ?? 420);
+        const cap = Number(lvl.pulseMagnet.speedCap ?? 620);
+        const affectPickups = !!lvl.pulseMagnet.affectsPickups;
+        const affectEnemies = !!lvl.pulseMagnet.affectsEnemies;
+
+        for (const p of STATE.pickups){
+          if (p.isEnemy && !affectEnemies) continue;
+          if (!p.isEnemy && !affectPickups) continue;
+          applySeek(dt, p, STATE.player.x, STATE.player.y, strength, cap);
+        }
+      }
+    }
+
+    function countOnField(type, isEnemy=null){
+      let n = 0;
+      for (const p of STATE.pickups){
+        if (p.type !== type) continue;
+        if (isEnemy === null) { n++; continue; }
+        if (!!p.isEnemy === !!isEnemy) n++;
+      }
+      return n;
+    }
+
+    function enqueueRespawn(type, delay){
+      STATE.respawnQueue.push({ type, t: Math.max(0, delay) });
+    }
+
+    function updateRespawnQueue(dt){
+      for (let i = STATE.respawnQueue.length - 1; i >= 0; i--){
+        const it = STATE.respawnQueue[i];
+        it.t -= dt;
+        if (it.t <= 0){
+          spawnOne(it.type, false);
+          STATE.respawnQueue.splice(i, 1);
+        }
+      }
+    }
+
+    function updateSurviveSpawners(dt){
+      const wantW = SURVIVE.keepOnField.white;
+      const wantP = SURVIVE.keepOnField.purple;
+
+      const haveW = countOnField("white", false) + STATE.respawnQueue.filter(x => x.type==="white").length;
+      const haveP = countOnField("purple", false) + STATE.respawnQueue.filter(x => x.type==="purple").length;
+
+      if (haveW < wantW) enqueueRespawn("white", SURVIVE.respawnDelayCollectible);
+      if (haveP < wantP) enqueueRespawn("purple", SURVIVE.respawnDelayCollectible);
+
+      updateRespawnQueue(dt);
+
+      STATE.surviveChaoticTimer += dt;
+      if (STATE.surviveChaoticTimer >= STATE.surviveNextChaoticAt){
+        STATE.surviveChaoticTimer = 0;
+        STATE.surviveNextChaoticAt = SURVIVE.chaoticSpawnEvery + rand(0, SURVIVE.chaoticSpawnJitter);
+
+        const current = countOnField("yellow", true);
+        if (current < SURVIVE.enemies.chaoticYellowMax){
+          spawnOne("yellow", true, { baseV: rand(190,260) });
+        }
       }
     }
 
@@ -627,21 +868,7 @@
     }
 
     function update(dt){
-      const lvl = LEVELS[STATE.currentLevelIndex];
-
-      if (lvl.surviveSeconds && lvl.surviveSeconds > 0){
-        STATE.timeSurvived += dt;
-      }
-
-      if (lvl.timeLimit < 9000){
-        STATE.timeLeft -= dt;
-        if (STATE.timeLeft <= 0){
-          STATE.timeLeft = 0;
-          if (checkWin()){ winAndPromptNext(); return; }
-          showGameOver("Time is up.");
-          return;
-        }
-      }
+      STATE.levelTime += dt;
 
       let mx = 0, my = 0;
       if (STATE.keys.has("ArrowLeft") || STATE.keys.has("a") || STATE.keys.has("A")) mx -= 1;
@@ -657,6 +884,28 @@
       STATE.player.x = clamp(STATE.player.x, 28, STATE.w - 28);
       STATE.player.y = clamp(STATE.player.y, 72, STATE.h - 28);
 
+      if (STATE.mode === GAME_MODES.CAMPAIGN){
+        const lvl = LEVELS[STATE.currentLevelIndex];
+
+        if (lvl.surviveSeconds && lvl.surviveSeconds > 0){
+          STATE.timeSurvived += dt;
+        }
+
+        if (lvl.timeLimit < 9000){
+          STATE.timeLeft -= dt;
+          if (STATE.timeLeft <= 0){
+            STATE.timeLeft = 0;
+            if (checkWinCampaign()){ winAndPromptNext(); return; }
+            showGameOver("Time is up.");
+            return;
+          }
+        }
+
+        updateShieldState(dt, lvl);
+      } else {
+        updateSurviveSpawners(dt);
+      }
+
       for (const p of STATE.pickups){
         p.x += p.vx * dt;
         p.y += p.vy * dt;
@@ -666,9 +915,21 @@
         if (p.x > STATE.w - pad){ p.x = STATE.w - pad; p.vx *= -1; }
         if (p.y < 72){ p.y = 72; p.vy *= -1; }
         if (p.y > STATE.h - pad){ p.y = STATE.h - pad; p.vy *= -1; }
+      }
 
-        if (p.isEnemy){
-          applyEnemyChase(dt, lvl, p);
+      if (STATE.mode === GAME_MODES.CAMPAIGN){
+        const lvl = LEVELS[STATE.currentLevelIndex];
+        for (const p of STATE.pickups){
+          if (!p.isEnemy) continue;
+          applyEnemyChaseCampaign(dt, lvl, p);
+        }
+        applyCampaignMagnets(dt, lvl);
+      } else {
+        for (const p of STATE.pickups){
+          if (!p.isEnemy) continue;
+          if (p.type === "blue"){
+            applySeek(dt, p, STATE.player.x, STATE.player.y, SURVIVE.magnetStrength, SURVIVE.magnetSpeedCap);
+          }
         }
       }
 
@@ -682,34 +943,47 @@
             return;
           }
 
-          if (lvl.forbidden && lvl.forbidden[p.type]){
-            showGameOver("You touched a forbidden ice cream.");
-            return;
+          if (STATE.mode === GAME_MODES.CAMPAIGN){
+            const lvl = LEVELS[STATE.currentLevelIndex];
+            if (lvl.forbidden && lvl.forbidden[p.type]){
+              showGameOver("You touched a forbidden ice cream.");
+              return;
+            }
+            if (p.shieldEnabled && p.shieldOn){
+              STATE.flashT = 0.03;
+              continue;
+            }
           }
 
           STATE.pickups.splice(i, 1);
+
           if (p.type === "white") STATE.collected.white++;
           if (p.type === "purple") STATE.collected.purple++;
           if (p.type === "yellow") STATE.collected.yellow++;
           if (p.type === "blue") STATE.collected.blue++;
+
+          if (STATE.mode === GAME_MODES.SURVIVE){
+            if (p.type === "white" || p.type === "purple") STATE.score += 1;
+            enqueueRespawn(p.type, SURVIVE.respawnDelayCollectible);
+          }
+
           STATE.flashT = 0.08;
 
-          if (lvl.sequential && !p.isEnemy && p.type === lvl.sequential.type){
-            STATE.seqRemaining = Math.max(0, STATE.seqRemaining - 1);
-            if (STATE.seqRemaining > 0){
-              spawnOne(lvl.sequential.type, false);
+          if (STATE.mode === GAME_MODES.CAMPAIGN){
+            const lvl = LEVELS[STATE.currentLevelIndex];
+            if (lvl.sequential && !p.isEnemy && p.type === lvl.sequential.type){
+              STATE.seqRemaining = Math.max(0, STATE.seqRemaining - 1);
+              if (STATE.seqRemaining > 0){
+                spawnOne(lvl.sequential.type, false);
+                applyShieldsForLevel(lvl);
+              }
+            }
+            if (checkWinCampaign()){
+              winAndPromptNext();
+              return;
             }
           }
-
-          if (checkWin()){
-            winAndPromptNext();
-            return;
-          }
         }
-      }
-
-      if (lvl.surviveSeconds && lvl.surviveSeconds > 0 && STATE.timeSurvived >= lvl.surviveSeconds){
-        if (checkWin()){ winAndPromptNext(); return; }
       }
 
       STATE.flashT = Math.max(0, STATE.flashT - dt);
@@ -767,10 +1041,21 @@
       if (p.isEnemy){
         ctx.save();
         ctx.globalAlpha = 0.22;
-        ctx.fillStyle = "#b46cff";
+        ctx.fillStyle = (p.type === "blue") ? "#5fe1ff" : "#ffd54a";
         ctx.beginPath();
         ctx.arc(p.x, p.y, 38, 0, Math.PI*2);
         ctx.fill();
+        ctx.restore();
+      }
+
+      if (p.shieldEnabled && p.shieldOn){
+        ctx.save();
+        ctx.globalAlpha = 0.28;
+        ctx.strokeStyle = "#ffd54a";
+        ctx.lineWidth = 4;
+        ctx.beginPath();
+        ctx.arc(p.x, p.y, 34, 0, Math.PI*2);
+        ctx.stroke();
         ctx.restore();
       }
 
@@ -783,7 +1068,20 @@
     }
 
     function updateHUD(){
+      if (STATE.mode === GAME_MODES.SURVIVE){
+        ui.hudMode.textContent = "SURVIVE";
+        ui.hudLevel.textContent = "—";
+        ui.hudTime.textContent = String(STATE.score);
+        ui.hudGoal.textContent = "SCORE";
+        ui.hudCollected.textContent = `Best:${STATE.bestScore}`;
+
+        ui.hudProgressText.textContent = "∞";
+        ui.hudProgressFill.style.width = "100%";
+        return;
+      }
+
       const lvl = LEVELS[STATE.currentLevelIndex];
+      ui.hudMode.textContent = "CAMPAIGN";
       ui.hudLevel.textContent = `${STATE.currentLevelIndex + 1} / ${LEVELS.length}`;
       ui.hudTime.textContent = (lvl.timeLimit >= 9000) ? "∞" : STATE.timeLeft.toFixed(1);
 
@@ -840,15 +1138,27 @@
 
     ui.btnBackToIntro.addEventListener("click", () => showIntro());
 
-    ui.levelSelect.addEventListener("click", (e) => {
-      const btn = e.target.closest("button[data-level]");
+    ui.levelSelect.addEventListener("click", async (e) => {
+      const btn = e.target.closest("button");
       if (!btn) return;
-      const idx = Number(btn.getAttribute("data-level"));
+
+      if (btn.matches("button[data-mode='survive']")){
+        await ensureAssets();
+        showGameScene();
+        resetSurvive();
+        showLevelOverlay("./ SURVIVE", "Collect ice creams for score. Avoid enemies forever.", "./ SURVIVE");
+        STATE.running = false;
+        return;
+      }
+
+      const levelBtn = btn.closest("button[data-level]");
+      if (!levelBtn) return;
+      const idx = Number(levelBtn.getAttribute("data-level"));
       if (!Number.isFinite(idx) || idx < 0 || idx >= LEVELS.length) return;
 
       showGameScene();
-      resetForLevel(idx);
-      showLevelOverlay(idx);
+      resetCampaignLevel(idx);
+      showLevelOverlay(LEVELS[idx].name, LEVELS[idx].task, "./ " + LEVELS[idx].name);
       STATE.running = false;
     });
 
@@ -862,12 +1172,18 @@
 
     ui.btnRestart.addEventListener("click", () => {
       hide(ui.gameOverOverlay);
-      resetForLevel(STATE.currentLevelIndex);
-      showLevelOverlay(STATE.currentLevelIndex);
+      if (STATE.mode === GAME_MODES.SURVIVE){
+        resetSurvive();
+        showLevelOverlay("./ SURVIVE", "Collect ice creams for score. Avoid enemies forever.", "./ SURVIVE");
+      } else {
+        resetCampaignLevel(STATE.currentLevelIndex);
+        showLevelOverlay(LEVELS[STATE.currentLevelIndex].name, LEVELS[STATE.currentLevelIndex].task, "./ " + LEVELS[STATE.currentLevelIndex].name);
+      }
       STATE.running = false;
     });
 
     ui.btnLevels.addEventListener("click", () => showLevelsMenu());
+    ui.btnMenu.addEventListener("click", () => showIntro());
 
     async function ensureAssets(){
       if (STATE.assetsReady) return;
@@ -883,6 +1199,10 @@
     }
 
     (function init(){
+      STATE.doneLevels = loadDoneArray();
+      STATE.bestScore = loadBestScore();
+      buildLevelsGrid();
+
       STATE.ctx = ui.canvas.getContext("2d", { alpha: true });
       resizeCanvas();
       window.addEventListener("resize", resizeCanvas);
